@@ -213,7 +213,7 @@ export const warehouseDb = {
     }
   },
 
-  // Fetch recent logs for warehouse dashboard
+  // Fetch recent logs for warehouse dashboard (with items and worker attribution)
   async fetchRecentLogs(limit = 10) {
     if (!isSupabaseConfigured) {
       return { data: [], error: null }
@@ -222,13 +222,24 @@ export const warehouseDb = {
     try {
       const { data, error } = await supabase
         .from('inventory_logs')
-        .select('*, items(name, sku, unit)')
+        .select('*, items(name, sku, unit), worker:worker_profiles(full_name, worker_code, role)')
         .order('created_at', { ascending: false })
         .limit(limit)
 
       if (error) {
-        console.error('Supabase recent logs fetch error:', error.message)
-        return { data: [], error }
+        console.warn('Worker join on recent logs failed, falling back:', error.message)
+        const { data: simpleData, error: simpleError } = await supabase
+          .from('inventory_logs')
+          .select('*, items(name, sku, unit)')
+          .order('created_at', { ascending: false })
+          .limit(limit)
+
+        if (simpleError) {
+          console.error('Supabase recent logs fetch error:', simpleError.message)
+          return { data: [], error: simpleError }
+        }
+
+        return { data: simpleData || [], error: null }
       }
 
       return { data: data || [], error: null }

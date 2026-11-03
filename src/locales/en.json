@@ -178,7 +178,9 @@
     "close": "Close",
     "active": "Active",
     "connected": "Connected",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "today": "Today",
+    "yesterday": "Yesterday"
   },
   "roles": {
     "admin": "Admin",

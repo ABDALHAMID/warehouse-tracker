@@ -178,7 +178,9 @@
     "close": "إغلاق",
     "active": "نشط",
     "connected": "متصل",
-    "disconnected": "غير متصل"
+    "disconnected": "غير متصل",
+    "today": "اليوم",
+    "yesterday": "أمس"
   },
   "roles": {
     "admin": "مدير النظام",

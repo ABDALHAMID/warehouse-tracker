@@ -178,7 +178,9 @@
     "close": "سد",
     "active": "خدام",
     "connected": "مكانيكطي",
-    "disconnected": "مقطوع"
+    "disconnected": "مقطوع",
+    "today": "ليوما",
+    "yesterday": "البارح"
   },
   "roles": {
     "admin": "لادمين",

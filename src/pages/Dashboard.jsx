@@ -15,7 +15,57 @@ import {
   CheckCircle2,
   PackageCheck,
   PackageOpen,
+  HardHat,
+  SlidersHorizontal,
 } from 'lucide-react'
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+function formatMovementDate(dateString, t) {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) return ''
+
+  const now = new Date()
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+  const logDayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+  const diffDays = Math.round((todayStart - logDayStart) / (1000 * 60 * 60 * 24))
+
+  const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+  if (diffDays === 0) {
+    return `${t('common.today', 'Today')}, ${timeStr}`
+  }
+  if (diffDays === 1) {
+    return `${t('common.yesterday', 'Yesterday')}, ${timeStr}`
+  }
+
+  const dateStr = date.toLocaleDateString([], {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+  return `${dateStr}, ${timeStr}`
+}
+
+function formatWorkerName(log, fallbackText) {
+  if (log.worker?.full_name) {
+    return log.worker.worker_code
+      ? `${log.worker.full_name} (${log.worker.worker_code})`
+      : log.worker.full_name
+  }
+  if (
+    log.worker_name &&
+    !UUID_PATTERN.test(log.worker_name.trim()) &&
+    !log.worker_name.startsWith('worker-')
+  ) {
+    return log.worker_name
+  }
+  if (log.worker?.worker_code) {
+    return log.worker.worker_code
+  }
+  return fallbackText || 'Worker'
+}
 
 export default function Dashboard() {
   const { t } = useTranslation()
@@ -394,34 +444,45 @@ export default function Dashboard() {
         ) : (
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-sm">
             {recentLogs.map((log) => {
+              const isAdjustment = log.change_type === 'ADJUSTMENT'
               const isAdd = log.change_type === 'IN'
+              const workerDisplayName = formatWorkerName(log, t('nav.worker'))
+              const dateDisplay = formatMovementDate(log.created_at, t)
+
               return (
                 <div
                   key={log.id}
                   className="p-3.5 sm:p-4 flex items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        isAdd
+                        isAdjustment
+                          ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400'
+                          : isAdd
                           ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400'
                           : 'bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400'
                       }`}
                     >
-                      {isAdd ? (
+                      {isAdjustment ? (
+                        <SlidersHorizontal className="w-5 h-5" />
+                      ) : isAdd ? (
                         <TrendingUp className="w-5 h-5" />
                       ) : (
                         <TrendingDown className="w-5 h-5" />
                       )}
                     </div>
-                    <div>
-                      <div className="text-sm font-bold text-slate-900 dark:text-white">
+                    <div className="min-w-0">
+                      <div className="text-sm font-bold text-slate-900 dark:text-white truncate">
                         {log.items?.name || `Material ID: ${log.item_id}`}
                       </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                        <span>{log.worker_name || log.worker_id}</span>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 flex-wrap">
+                        <span className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
+                          <HardHat className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                          <span>{workerDisplayName}</span>
+                        </span>
                         <span>•</span>
-                        <span>{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span>{dateDisplay}</span>
                         {log.notes && (
                           <>
                             <span>•</span>
@@ -434,12 +495,19 @@ export default function Dashboard() {
 
                   <div
                     className={`text-base font-black shrink-0 ${
-                      isAdd
+                      isAdjustment
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : isAdd
                         ? 'text-emerald-600 dark:text-emerald-400'
                         : 'text-red-600 dark:text-red-400'
                     }`}
                   >
-                    {isAdd ? `+${log.quantity}` : `-${log.quantity}`}
+                    {isAdjustment ? log.quantity : isAdd ? `+${log.quantity}` : `-${log.quantity}`}{' '}
+                    {log.items?.unit && (
+                      <span className="text-xs font-semibold text-slate-400">
+                        {t(`common.units.${log.items.unit}`, log.items.unit)}
+                      </span>
+                    )}
                   </div>
                 </div>
               )
