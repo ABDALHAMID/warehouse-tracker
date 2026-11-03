@@ -53,6 +53,8 @@
     "criticalAlertsTitle": "Avertissements Stock Critique",
     "criticalAlertsSubtitle": "Matériaux en dessous ou au seuil minimum",
     "noAlerts": "Tous les matériaux de construction sont au-dessus du seuil de sécurité.",
+    "noDataInStockTitle": "Aucune Donnée en Stock",
+    "noDataInStockDesc": "Il n'y a aucune donnée en stock. La base de données de l'entrepôt est actuellement vide.",
     "currentStock": "Stock Actuel",
     "minStock": "Seuil Min",
     "restockNow": "Gérer le Stock",
@@ -72,6 +74,8 @@
     "outOfStock": "Rupture",
     "itemsFound": "{{count}} matériaux trouvés",
     "noItems": "Aucun matériau ne correspond à votre recherche.",
+    "noDataInStockTitle": "Aucune Donnée en Stock",
+    "noDataInStockDesc": "Il n'y a aucune donnée en stock. Aucun matériau trouvé dans la base de données.",
     "sku": "Code SKU",
     "currentStock": "Quantité",
     "location": "Emplacement Dépôt",
@@ -136,7 +140,14 @@
     "timber": "Bois & Coffrage",
     "plumbing": "Plomberie & Tuyaux",
     "electrical": "Électricité & Câblage",
-    "paints": "Peinture & Étanchéité"
+    "paints": "Peinture & Étanchéité",
+    "cement_aggregates": "Ciment, Sable & Granulats",
+    "steel_rebar": "Fer à Béton & Armatures",
+    "bricks_blocks": "Briques, Hourdis & Parpaings",
+    "timber_formwork": "Bois de Coffrage & Charpente",
+    "plumbing_drainage": "Plomberie & Assainissement",
+    "paints_waterproofing": "Peinture & Étanchéité",
+    "tiles_finishes": "Carrelage & Revêtements"
   },
   "common": {
     "units": {
@@ -146,7 +157,16 @@
       "pieces": "Pièces",
       "meters": "m",
       "pallets": "Palettes",
-      "buckets": "Seaux"
+      "buckets": "Seaux",
+      "sac": "Sac",
+      "barre": "Barre",
+      "piece": "Pièce",
+      "m3": "m³",
+      "m2": "m²",
+      "rouleau": "Rouleau",
+      "seau": "Seau",
+      "bidon": "Bidon",
+      "panneau": "Panneau"
     },
     "loading": "Chargement des données du dépôt...",
     "error": "Une erreur est survenue",

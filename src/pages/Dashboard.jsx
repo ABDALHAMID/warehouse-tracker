@@ -14,6 +14,7 @@ import {
   Clock,
   CheckCircle2,
   PackageCheck,
+  PackageOpen,
 } from 'lucide-react'
 
 export default function Dashboard() {
@@ -104,6 +105,33 @@ export default function Dashboard() {
         {/* Decorative background glow */}
         <div className="absolute -end-10 -bottom-10 w-44 h-44 rounded-full bg-blue-500/20 blur-2xl pointer-events-none" />
       </div>
+
+      {/* Empty Database Stock Warning */}
+      {items.length === 0 && (
+        <div className="p-5 sm:p-6 rounded-3xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm animate-in fade-in">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-md">
+              <PackageOpen className="w-6 h-6 stroke-[2.5]" />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-black text-amber-950 dark:text-amber-200 m-0 leading-tight">
+                {t('dashboard.noDataInStockTitle')}
+              </h2>
+              <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-300 mt-0.5">
+                {t('dashboard.noDataInStockDesc')}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs shrink-0 cursor-pointer active:scale-95 transition-all shadow-sm"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>{t('common.refresh', 'Refresh')}</span>
+          </button>
+        </div>
+      )}
 
       {/* KPI Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -257,7 +285,17 @@ export default function Dashboard() {
           </span>
         </div>
 
-        {lowStockItems.length === 0 ? (
+        {items.length === 0 ? (
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-800 text-center flex flex-col items-center justify-center">
+            <PackageOpen className="w-10 h-10 text-slate-400 mb-2" />
+            <h3 className="text-base font-bold text-slate-800 dark:text-slate-200 mb-1">
+              {t('dashboard.noDataInStockTitle')}
+            </h3>
+            <p className="text-xs text-slate-500 max-w-sm">
+              {t('dashboard.noDataInStockDesc')}
+            </p>
+          </div>
+        ) : lowStockItems.length === 0 ? (
           <div className="p-6 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 text-center flex flex-col items-center justify-center">
             <PackageCheck className="w-10 h-10 text-emerald-600 dark:text-emerald-400 mb-2" />
             <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">

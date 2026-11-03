@@ -53,6 +53,8 @@
     "criticalAlertsTitle": "Urgent Low Stock Warnings",
     "criticalAlertsSubtitle": "Materials at or below minimum threshold",
     "noAlerts": "All building materials are currently above minimum stock levels.",
+    "noDataInStockTitle": "No Data in Stock",
+    "noDataInStockDesc": "There is no data in stock. Your warehouse inventory database is currently empty.",
     "currentStock": "Current",
     "minStock": "Min Limit",
     "restockNow": "Manage Stock",
@@ -72,6 +74,8 @@
     "outOfStock": "Out of Stock",
     "itemsFound": "{{count}} materials found",
     "noItems": "No materials match your search criteria.",
+    "noDataInStockTitle": "No Data in Stock",
+    "noDataInStockDesc": "There is no data in stock. No materials found in the warehouse database.",
     "sku": "SKU",
     "currentStock": "In Stock",
     "location": "Aisle / Yard Location",
@@ -136,7 +140,14 @@
     "timber": "Wood & Timber",
     "plumbing": "Plumbing & Drainage",
     "electrical": "Electrical Supplies",
-    "paints": "Paints & Waterproofing"
+    "paints": "Paints & Waterproofing",
+    "cement_aggregates": "Cement & Aggregates",
+    "steel_rebar": "Steel Rebar & Mesh",
+    "bricks_blocks": "Bricks & Blocks",
+    "timber_formwork": "Timber & Formwork",
+    "plumbing_drainage": "Plumbing & Drainage",
+    "paints_waterproofing": "Paints & Waterproofing",
+    "tiles_finishes": "Tiles & Finishes"
   },
   "common": {
     "units": {
@@ -146,7 +157,16 @@
       "pieces": "Pcs",
       "meters": "m",
       "pallets": "Pallets",
-      "buckets": "Buckets"
+      "buckets": "Buckets",
+      "sac": "Bag",
+      "barre": "Bar",
+      "piece": "Pc",
+      "m3": "m³",
+      "m2": "m²",
+      "rouleau": "Roll",
+      "seau": "Bucket",
+      "bidon": "Can",
+      "panneau": "Sheet"
     },
     "loading": "Loading warehouse data...",
     "error": "An error occurred",

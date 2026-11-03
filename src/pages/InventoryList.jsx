@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { warehouseDb } from '../lib/warehouseDb'
+import { CATEGORIES_TYPES } from '../data/categories_types'
 import {
   Search,
   X,
@@ -12,6 +13,7 @@ import {
   XCircle,
   ArrowRight,
   RefreshCw,
+  PackageOpen,
 } from 'lucide-react'
 
 export default function InventoryList() {
@@ -46,17 +48,19 @@ export default function InventoryList() {
     }
   }, [])
 
-  // Categories list
-  const categories = [
-    { id: 'all', labelKey: 'categories.all' },
-    { id: 'cement', labelKey: 'categories.cement' },
-    { id: 'steel', labelKey: 'categories.steel' },
-    { id: 'bricks', labelKey: 'categories.bricks' },
-    { id: 'timber', labelKey: 'categories.timber' },
-    { id: 'plumbing', labelKey: 'categories.plumbing' },
-    { id: 'electrical', labelKey: 'categories.electrical' },
-    { id: 'paints', labelKey: 'categories.paints' },
-  ]
+  // Categories list loaded from standard CATEGORIES_TYPES
+  const categories = useMemo(
+    () => [
+      { id: 'all', slug: 'all', labelKey: 'categories.all', name: t('categories.all') },
+      ...CATEGORIES_TYPES.map((cat) => ({
+        id: cat.id,
+        slug: cat.slug,
+        labelKey: `categories.${cat.slug}`,
+        name: t(`categories.${cat.slug}`, cat.name_fr),
+      })),
+    ],
+    [t]
+  )
 
   // Filter items based on search term, category, and status
   const filteredItems = useMemo(() => {
@@ -69,9 +73,12 @@ export default function InventoryList() {
         item.sku.toLowerCase().includes(q) ||
         (item.location && item.location.toLowerCase().includes(q))
 
-      // 2. Category match
+      // 2. Category match (supports ID, slug, or name match)
       const matchesCategory =
-        selectedCategory === 'all' || item.category === selectedCategory
+        selectedCategory === 'all' ||
+        item.category_id === selectedCategory ||
+        item.category_slug === selectedCategory ||
+        (item.category && item.category.toLowerCase().includes(selectedCategory.toLowerCase()))
 
       // 3. Status match
       const stock = Number(item.current_stock)
@@ -146,7 +153,7 @@ export default function InventoryList() {
                   : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              {t(cat.labelKey)}
+              {cat.name}
             </button>
           )
         })}
@@ -183,6 +190,26 @@ export default function InventoryList() {
         <div className="flex flex-col items-center justify-center min-h-[40vh] gap-3">
           <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
           <p className="text-sm font-semibold text-slate-500">{t('common.loading')}</p>
+        </div>
+      ) : items.length === 0 ? (
+        <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-800 text-center flex flex-col items-center justify-center shadow-sm">
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 flex items-center justify-center mb-4">
+            <PackageOpen className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2">
+            {t('inventory.noDataInStockTitle')}
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mb-6 leading-relaxed">
+            {t('inventory.noDataInStockDesc')}
+          </p>
+          <button
+            type="button"
+            onClick={loadItems}
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md active:scale-95 transition-all cursor-pointer"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>{t('common.refresh', 'Refresh Inventory')}</span>
+          </button>
         </div>
       ) : filteredItems.length === 0 ? (
         <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center flex flex-col items-center justify-center">
@@ -226,7 +253,7 @@ export default function InventoryList() {
                         {item.sku}
                       </span>
                       <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
-                        {t(`categories.${item.category}`, item.category)}
+                        {item.category_slug ? t(`categories.${item.category_slug}`, item.category) : item.category}
                       </span>
                     </div>
 

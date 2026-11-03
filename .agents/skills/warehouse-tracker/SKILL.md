@@ -16,6 +16,7 @@ This skill guides AI agents in understanding, modifying, and extending the **Bui
 - [Architecture & Components](./references/architecture.md)
 - [Database & Supabase Schema](./references/database.md)
 - [Internationalization & RTL Guide](./references/i18n-guide.md)
+- [Moroccan Building Materials Catalog Skill](../moroccan-building-materials/SKILL.md)
 
 ---
 
@@ -41,30 +42,32 @@ The application is a mobile-first, high-contrast inventory tracker designed for 
 
 | File / Folder | Responsibility |
 |---|---|
-| [`src/lib/supabaseClient.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/lib/supabaseClient.js) | Initializes `@supabase/supabase-js`, exports `isSupabaseConfigured`, and supplies fallback seed items |
+| [`src/data/categories_types.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/data/categories_types.js) | Standard Moroccan categories (`CATEGORIES_TYPES`), IDs, slugs, and localized names |
+| [`src/data/items_types.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/data/items_types.js) | 35 authentic Moroccan items (`ITEMS_TYPES`), SKUs, units, default stocks, thresholds |
+| [`src/data/index.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/data/index.js) | Barrel export for category and item types and lookup helpers |
+| [`src/lib/supabaseClient.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/lib/supabaseClient.js) | Initializes `@supabase/supabase-js` and exports `isSupabaseConfigured` |
 | [`src/lib/warehouseDb.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/lib/warehouseDb.js) | Central data access layer for items, logs, lookups by SKU, and Realtime subscriptions |
 | [`src/lib/i18n.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/lib/i18n.js) | `react-i18next` initialization and dynamic `dir="rtl"` / `dir="ltr"` switcher |
 | [`src/locales/`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/locales/) | `en.json`, `fr.json`, `ar.json`, `ar-MA.json` translation files |
-| [`src/context/AuthContext.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/context/AuthContext.jsx) | Supabase Auth listener, session persistence, and instant demo worker login helpers |
+| [`src/context/AuthContext.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/context/AuthContext.jsx) | Supabase Auth listener, session persistence, and worker authentication |
 | [`src/context/ThemeContext.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/context/ThemeContext.jsx) | Class-based dark mode state toggling `.dark` on `<html>` |
 | [`src/components/Scanner.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/components/Scanner.jsx) | Camera viewfinder using `html5-qrcode` with torch, camera flip, and haptic feedback |
 | [`src/components/Layout.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/components/Layout.jsx) | Navigation bar, worker profile badge, mode indicator (LIVE vs DEMO), mobile bottom tabs |
-| [`src/pages/Dashboard.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/Dashboard.jsx) | Total catalog KPI, low stock alerts list (`current_stock <= min_stock_level`), quick scan card |
-| [`src/pages/InventoryList.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/InventoryList.jsx) | Live search by name/SKU, category filter tabs, stock status chips |
+| [`src/pages/Dashboard.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/Dashboard.jsx) | Total catalog KPI, empty stock message, low stock alerts list (`current_stock <= min_stock_level`), quick scan card |
+| [`src/pages/InventoryList.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/InventoryList.jsx) | Live search by name/SKU, empty stock state, dynamic category filter tabs from `CATEGORIES_TYPES`, stock status chips |
 | [`src/pages/ItemDetail.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/ItemDetail.jsx) | Route `/item/:id`, Realtime subscription, large IN/OUT action buttons, item audit log |
-| [`src/pages/ScanView.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/ScanView.jsx) | Dedicated camera scanner page, manual SKU fallback input, quick test barcode chips |
-| [`supabase_schema.sql`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/supabase_schema.sql) | Complete PostgreSQL tables, trigger function, RLS policies, and seed data |
+| [`src/pages/ScanView.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/ScanView.jsx) | Dedicated camera scanner page and manual SKU fallback input |
+| [`supabase/migrations/`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/supabase/migrations/) | Production Supabase database migrations (schema, tables, triggers, and seed categories) |
+| [`.agents/skills/moroccan-building-materials/`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/.agents/skills/moroccan-building-materials/SKILL.md) | Standard catalog and Darija terminology for Moroccan warehouse materials |
 
 ---
 
 ## 3. Step-by-Step Runbooks for Common Modifications
 
 ### Runbook A: Adding a New Category
-1. Open [`src/pages/InventoryList.jsx`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/pages/InventoryList.jsx) and add the category slug to the `categories` array:
-   ```javascript
-   { id: 'insulation', labelKey: 'categories.insulation' }
-   ```
-2. Add the translation in all 4 locale JSON files under the `"categories"` key:
+1. Add the category in [`src/data/categories_types.js`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/src/data/categories_types.js) with its deterministic UUID, slug, and multilingual names.
+2. In [`supabase/migrations/20261103012727_seed_categories_and_items.sql`](file:///home/abdalhamid/Documents/Project/warehouse-tracker/supabase/migrations/20261103012727_seed_categories_and_items.sql), add the `INSERT INTO categories ...` row.
+3. Add the translation in all 4 locale JSON files under the `"categories"` key:
    - `src/locales/en.json`: `"insulation": "Insulation & Drywall"`
    - `src/locales/fr.json`: `"insulation": "Isolation & Plaques de Plâtre"`
    - `src/locales/ar.json`: `"insulation": "العزل وألواح الجبس"`

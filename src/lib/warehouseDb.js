@@ -1,282 +1,264 @@
-import { supabase, isSupabaseConfigured, INITIAL_ITEMS, INITIAL_LOGS } from './supabaseClient'
+import { supabase, isSupabaseConfigured } from './supabaseClient'
+import { getCategoryById } from '../data/categories_types'
 
-const LOCAL_STORAGE_ITEMS_KEY = 'mattrack_warehouse_items_v1'
-const LOCAL_STORAGE_LOGS_KEY = 'mattrack_warehouse_logs_v1'
-
-// Initialize local fallback storage if empty
-const getLocalItems = () => {
+// Purge any legacy fake test data stored in previous versions
+if (typeof window !== 'undefined') {
   try {
-    const raw = localStorage.getItem(LOCAL_STORAGE_ITEMS_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch (e) {
-    console.error('Failed to read local items', e)
+    localStorage.removeItem('mattrack_warehouse_items_v1')
+    localStorage.removeItem('mattrack_warehouse_logs_v1')
+  } catch {
+    // ignore
   }
-  localStorage.setItem(LOCAL_STORAGE_ITEMS_KEY, JSON.stringify(INITIAL_ITEMS))
-  return INITIAL_ITEMS
 }
 
-const getLocalLogs = () => {
-  try {
-    const raw = localStorage.getItem(LOCAL_STORAGE_LOGS_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch (e) {
-    console.error('Failed to read local logs', e)
+// Normalize item schema (handles category_id / categories relation and location_bin)
+const normalizeItem = (item) => {
+  if (!item) return null
+  const matchedCat = item.category_id ? getCategoryById(item.category_id) : null
+  return {
+    ...item,
+    category_id: item.category_id || matchedCat?.id || null,
+    category_slug: matchedCat?.slug || item.category_slug || 'other',
+    category:
+      matchedCat?.name ||
+      item.categories?.name ||
+      item.category ||
+      'Autre',
+    location: item.location_bin || item.location || '',
   }
-  localStorage.setItem(LOCAL_STORAGE_LOGS_KEY, JSON.stringify(INITIAL_LOGS))
-  return INITIAL_LOGS
 }
 
 export const warehouseDb = {
   // Fetch all items from items table
   async fetchItems() {
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
+    if (!isSupabaseConfigured) {
+      return { data: [], error: null }
+    }
+
+    try {
+      // Join with categories table if available
+      const { data, error } = await supabase
+        .from('items')
+        .select('*, categories(name)')
+        .order('name', { ascending: true })
+
+      if (error) {
+        // Fallback to simple select if join with categories fails
+        const { data: simpleData, error: simpleError } = await supabase
           .from('items')
           .select('*')
           .order('name', { ascending: true })
 
-        if (!error && data && data.length > 0) {
-          return { data, error: null }
+        if (simpleError) {
+          console.error('Supabase items fetch failed:', simpleError.message)
+          return { data: [], error: simpleError }
         }
-        if (error) {
-          console.warn('Supabase items fetch failed, using local fallback:', error.message)
-        }
-      } catch (err) {
-        console.warn('Supabase fetch exception, using local fallback:', err)
+        return { data: (simpleData || []).map(normalizeItem), error: null }
       }
+
+      return { data: (data || []).map(normalizeItem), error: null }
+    } catch (err) {
+      console.error('Supabase fetch exception:', err)
+      return { data: [], error: err }
     }
-    return { data: getLocalItems(), error: null, isFallback: true }
   },
 
   // Fetch single item by ID
   async fetchItemById(id) {
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
+    if (!id || !isSupabaseConfigured) {
+      return { data: null, error: new Error('Item not found') }
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('items')
+        .select('*, categories(name)')
+        .eq('id', id)
+        .single()
+
+      if (error) {
+        // Try simple select if join fails
+        const { data: simpleData, error: simpleError } = await supabase
           .from('items')
           .select('*')
           .eq('id', id)
           .single()
 
-        if (!error && data) {
-          return { data, error: null }
+        if (simpleError) {
+          return { data: null, error: simpleError }
         }
-      } catch (err) {
-        console.warn('Supabase fetchItemById exception:', err)
+        return { data: normalizeItem(simpleData), error: null }
       }
-    }
 
-    const items = getLocalItems()
-    const found = items.find((item) => String(item.id) === String(id))
-    return { data: found || null, error: found ? null : new Error('Item not found'), isFallback: true }
+      return { data: normalizeItem(data), error: null }
+    } catch (err) {
+      console.error('Supabase fetchItemById exception:', err)
+      return { data: null, error: err }
+    }
   },
 
   // Lookup item by SKU barcode
   async fetchItemBySku(sku) {
-    if (!sku) return { data: null, error: new Error('SKU required') }
+    if (!sku || !isSupabaseConfigured) {
+      return { data: null, error: new Error('SKU required') }
+    }
     const cleanSku = sku.trim()
 
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
+    try {
+      const { data, error } = await supabase
+        .from('items')
+        .select('*, categories(name)')
+        .ilike('sku', cleanSku)
+        .single()
+
+      if (error) {
+        const { data: simpleData, error: simpleError } = await supabase
           .from('items')
           .select('*')
           .ilike('sku', cleanSku)
           .single()
 
-        if (!error && data) {
-          return { data, error: null }
+        if (simpleError) {
+          return { data: null, error: simpleError }
         }
-      } catch (err) {
-        console.warn('Supabase fetchItemBySku error, checking local:', err)
+        return { data: normalizeItem(simpleData), error: null }
       }
-    }
 
-    const items = getLocalItems()
-    const found = items.find(
-      (item) => item.sku.toLowerCase() === cleanSku.toLowerCase()
-    )
-    return { data: found || null, error: found ? null : new Error('Item not found'), isFallback: true }
+      return { data: normalizeItem(data), error: null }
+    } catch (err) {
+      console.error('Supabase fetchItemBySku error:', err)
+      return { data: null, error: err }
+    }
   },
 
-  // Insert a new log row into inventory_logs (trigger updates items.current_stock)
-  async insertInventoryLog({ itemId, workerId, workerName, changeType, quantity, notes }) {
+  // Insert a new log row into inventory_logs (database trigger updates items.current_stock)
+  async insertInventoryLog({ itemId, workerId, changeType, quantity, notes }) {
     const qtyNum = Number(quantity)
     if (!qtyNum || qtyNum <= 0) {
       return { data: null, error: new Error('Invalid quantity') }
     }
 
+    if (!isSupabaseConfigured) {
+      return { data: null, error: new Error('Database not configured') }
+    }
+
     const payload = {
       item_id: itemId,
-      worker_id: workerId || 'w-worker',
-      worker_name: workerName || 'Warehouse Worker',
+      worker_id: workerId,
       change_type: changeType, // 'IN' or 'OUT'
       quantity: qtyNum,
       notes: notes || '',
     }
 
-    let supabaseSuccess = false
-    let insertedRow = null
+    try {
+      const { data, error } = await supabase
+        .from('inventory_logs')
+        .insert([payload])
+        .select()
+        .single()
 
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
-          .from('inventory_logs')
-          .insert([payload])
-          .select()
-          .single()
-
-        if (!error) {
-          supabaseSuccess = true
-          insertedRow = data
-        } else {
-          console.warn('Supabase insert log failed, applying locally:', error.message)
-        }
-      } catch (err) {
-        console.warn('Supabase insert log exception:', err)
+      if (error) {
+        console.error('Supabase insert log failed:', error.message)
+        return { data: null, error }
       }
-    }
 
-    // Always keep local state in sync or apply fallback (simulating database trigger)
-    const items = getLocalItems()
-    const itemIndex = items.findIndex((i) => String(i.id) === String(itemId))
-    let updatedItem = null
+      // Re-fetch updated item to ensure sync
+      const { data: updatedItem } = await this.fetchItemById(itemId)
 
-    if (itemIndex !== -1) {
-      const delta = changeType === 'IN' ? qtyNum : -qtyNum
-      items[itemIndex].current_stock = Math.max(0, Number(items[itemIndex].current_stock) + delta)
-      items[itemIndex].updated_at = new Date().toISOString()
-      updatedItem = items[itemIndex]
-      localStorage.setItem(LOCAL_STORAGE_ITEMS_KEY, JSON.stringify(items))
-    }
-
-    const localLog = insertedRow || {
-      id: 'log-' + Date.now(),
-      ...payload,
-      created_at: new Date().toISOString(),
-    }
-
-    const logs = getLocalLogs()
-    logs.unshift(localLog)
-    localStorage.setItem(LOCAL_STORAGE_LOGS_KEY, JSON.stringify(logs))
-
-    // Broadcast local realtime event to notify components
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('mattrack:item-updated', {
-          detail: { itemId, updatedItem, log: localLog },
-        })
-      )
-    }
-
-    return {
-      data: localLog,
-      updatedItem,
-      error: null,
-      isFallback: !supabaseSuccess,
+      return {
+        data,
+        updatedItem,
+        error: null,
+      }
+    } catch (err) {
+      console.error('Supabase insert log exception:', err)
+      return { data: null, error: err }
     }
   },
 
   // Fetch recent logs for a specific item
   async fetchItemLogs(itemId) {
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
-          .from('inventory_logs')
-          .select('*')
-          .eq('item_id', itemId)
-          .order('created_at', { ascending: false })
-          .limit(20)
-
-        if (!error && data) {
-          return { data, error: null }
-        }
-      } catch (err) {
-        console.warn('Supabase item logs fetch error:', err)
-      }
+    if (!itemId || !isSupabaseConfigured) {
+      return { data: [], error: null }
     }
 
-    const logs = getLocalLogs()
-    const filtered = logs.filter((l) => String(l.item_id) === String(itemId))
-    return { data: filtered, error: null, isFallback: true }
+    try {
+      const { data, error } = await supabase
+        .from('inventory_logs')
+        .select('*')
+        .eq('item_id', itemId)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      if (error) {
+        console.error('Supabase item logs fetch error:', error.message)
+        return { data: [], error }
+      }
+
+      return { data: data || [], error: null }
+    } catch (err) {
+      console.error('Supabase item logs fetch error:', err)
+      return { data: [], error: err }
+    }
   },
 
   // Fetch recent logs for warehouse dashboard
   async fetchRecentLogs(limit = 10) {
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
-          .from('inventory_logs')
-          .select('*, items(name, sku, unit)')
-          .order('created_at', { ascending: false })
-          .limit(limit)
-
-        if (!error && data) {
-          return { data, error: null }
-        }
-      } catch (err) {
-        console.warn('Supabase recent logs fetch error:', err)
-      }
+    if (!isSupabaseConfigured) {
+      return { data: [], error: null }
     }
 
-    const logs = getLocalLogs().slice(0, limit)
-    const items = getLocalItems()
-    const enriched = logs.map((log) => {
-      const item = items.find((i) => String(i.id) === String(log.item_id))
-      return {
-        ...log,
-        items: item ? { name: item.name, sku: item.sku, unit: item.unit } : null,
+    try {
+      const { data, error } = await supabase
+        .from('inventory_logs')
+        .select('*, items(name, sku, unit)')
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (error) {
+        console.error('Supabase recent logs fetch error:', error.message)
+        return { data: [], error }
       }
-    })
-    return { data: enriched, error: null, isFallback: true }
+
+      return { data: data || [], error: null }
+    } catch (err) {
+      console.error('Supabase recent logs fetch error:', err)
+      return { data: [], error: err }
+    }
   },
 
   // Realtime subscription setup
   subscribeToItemChanges(itemId, onUpdate) {
+    if (!isSupabaseConfigured || !itemId) {
+      return () => {}
+    }
+
     let channel = null
-
-    if (isSupabaseConfigured) {
-      try {
-        channel = supabase
-          .channel(`item-changes-${itemId}`)
-          .on(
-            'postgres_changes',
-            {
-              event: '*',
-              schema: 'public',
-              table: 'items',
-              filter: `id=eq.${itemId}`,
-            },
-            (payload) => {
-              if (payload.new) {
-                onUpdate(payload.new)
-              }
+    try {
+      channel = supabase
+        .channel(`item-changes-${itemId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'items',
+            filter: `id=eq.${itemId}`,
+          },
+          (payload) => {
+            if (payload.new) {
+              onUpdate(normalizeItem(payload.new))
             }
-          )
-          .subscribe()
-      } catch (e) {
-        console.warn('Failed to subscribe to Supabase channel', e)
-      }
-    }
-
-    // Also listen to local window events for immediate reactivity
-    const handleLocalUpdate = (e) => {
-      if (String(e.detail?.itemId) === String(itemId) && e.detail?.updatedItem) {
-        onUpdate(e.detail.updatedItem)
-      }
-    }
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('mattrack:item-updated', handleLocalUpdate)
+          }
+        )
+        .subscribe()
+    } catch (e) {
+      console.warn('Failed to subscribe to Supabase channel', e)
     }
 
     return () => {
-      if (channel && isSupabaseConfigured) {
+      if (channel) {
         supabase.removeChannel(channel)
-      }
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('mattrack:item-updated', handleLocalUpdate)
       }
     }
   },

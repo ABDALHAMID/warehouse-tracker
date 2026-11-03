@@ -10,7 +10,6 @@ import {
   AlertCircle,
   RefreshCw,
   Boxes,
-  Zap,
 } from 'lucide-react'
 
 export default function ScanView() {
@@ -114,26 +113,6 @@ export default function ScanView() {
             <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </button>
         </form>
-
-        {/* Quick Testing Barcode Chips for convenience */}
-        <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 mb-2">
-            <Zap className="w-3.5 h-3.5 text-amber-500" />
-            <span>Quick test barcode SKUs:</span>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {['CEM-45-001', 'STL-12-101', 'BRK-06-201', 'PLM-PVC-401'].map((sku) => (
-              <button
-                key={sku}
-                type="button"
-                onClick={() => processSkuLookup(sku)}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-xs font-bold transition-all cursor-pointer active:scale-95"
-              >
-                {sku}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Material Not Found Modal */}

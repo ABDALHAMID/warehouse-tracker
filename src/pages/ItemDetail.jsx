@@ -194,7 +194,7 @@ export default function ItemDetail() {
         <div>
           <div className="flex items-center gap-2 flex-wrap mb-2">
             <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
-              {t(`categories.${item.category}`, item.category)}
+              {item.category_slug ? t(`categories.${item.category_slug}`, item.category) : item.category}
             </span>
 
             <button
