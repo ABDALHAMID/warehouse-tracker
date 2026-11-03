@@ -23,7 +23,10 @@ import {
   AlertTriangle,
   RefreshCw,
   Phone,
+  Radio,
+  WifiOff,
 } from 'lucide-react'
+import { isSupabaseConfigured } from '../lib/supabaseClient'
 
 const LANGUAGE_LABELS = {
   en: 'English',
@@ -457,20 +460,34 @@ export default function Profile() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 flex items-center justify-center">
-          <UserCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-        </div>
-        <div className="min-w-0">
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white leading-tight truncate">
-            {profile.full_name}
-          </h1>
-          <div className="flex items-center gap-2 mt-1">
-            <RoleBadge role={profile.role} />
-            {isDemoUser && (
-              <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">DEMO</span>
-            )}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-3">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 flex items-center justify-center">
+            <UserCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white leading-tight truncate">
+              {profile.full_name}
+            </h1>
+            <div className="flex items-center gap-2 mt-1">
+              <RoleBadge role={profile.role} />
+            </div>
+          </div>
+        </div>
+
+        {/* System & Connection Status (Moved out of sight from the main header) */}
+        <div className="flex items-center">
+          {isSupabaseConfigured && !isDemoUser ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+              <Radio className="w-3.5 h-3.5 animate-pulse" />
+              Supabase Live
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800">
+              <WifiOff className="w-3.5 h-3.5" />
+              Demo Mode
+            </span>
+          )}
         </div>
       </div>
 

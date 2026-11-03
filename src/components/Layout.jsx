@@ -9,8 +9,6 @@ import {
   ScanBarcode,
   LogOut,
   HardHat,
-  Radio,
-  WifiOff,
   UserCircle,
   MapPin,
 } from 'lucide-react'
@@ -40,33 +38,29 @@ export default function Layout() {
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Top Header Bar */}
       <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
           {/* Logo & Title */}
           <NavLink
             to="/"
-            className="flex items-center gap-2.5 group cursor-pointer select-none active:scale-95 transition-transform"
+            className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer select-none active:scale-95 transition-transform min-w-0 shrink"
           >
-            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:bg-blue-700 transition-colors">
-              <Boxes className="w-6 h-6" />
+            <div className="relative w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm group-hover:bg-blue-700 transition-colors shrink-0">
+              <Boxes className="w-4 h-4 sm:w-5 sm:h-5" />
+              {/* Ultra-small status dot - zero horizontal space, out of the way */}
+              <span
+                title={isSupabaseConfigured && !isDemoUser ? 'Supabase Live' : 'Demo Mode'}
+                className={`absolute -top-0.5 -end-0.5 w-2 h-2 rounded-full ring-2 ring-white dark:ring-slate-900 ${
+                  isSupabaseConfigured && !isDemoUser
+                    ? 'bg-emerald-500 animate-pulse'
+                    : 'bg-amber-500'
+                }`}
+              />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white leading-none">
-                  {t('app.title')}
-                </span>
-                {isSupabaseConfigured && !isDemoUser ? (
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
-                    <Radio className="w-2.5 h-2.5 animate-pulse" />
-                    LIVE
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800">
-                    <WifiOff className="w-2.5 h-2.5" />
-                    DEMO
-                  </span>
-                )}
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 hidden sm:block">
+            <div className="min-w-0">
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white leading-none truncate block">
+                {t('app.title')}
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 hidden sm:block">
                 {t('app.subtitle')}
               </span>
             </div>
@@ -132,20 +126,20 @@ export default function Layout() {
           </nav>
 
           {/* Controls: Lang + Theme + Worker & Logout */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <LangSwitcher />
             <ThemeToggle />
 
             {/* Worker Badge & Logout Button */}
-            <div className="flex items-center ps-1 sm:ps-2 border-s border-slate-200 dark:border-slate-800 gap-1.5">
+            <div className="flex items-center ps-1 sm:ps-2 border-s border-slate-200 dark:border-slate-800 gap-1 sm:gap-1.5">
               <NavLink
                 to="/profile"
                 title={workerCode ? `${workerName} (${workerCode})` : workerName}
                 aria-label={t('nav.profile')}
-                className="flex items-center gap-2 min-h-11 px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer active:scale-95 touch-manipulation"
+                className="hidden sm:flex items-center gap-2 min-h-11 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer active:scale-95 touch-manipulation"
               >
                 <HardHat className="w-4 h-4 text-amber-500 shrink-0" />
-                <div className="hidden sm:flex flex-col leading-tight min-w-0">
+                <div className="flex flex-col leading-tight min-w-0">
                   <span className="max-w-[130px] truncate font-bold">
                     {workerName}
                     {workerCode && (
@@ -177,9 +171,9 @@ export default function Layout() {
                 onClick={handleLogout}
                 aria-label={t('nav.logout')}
                 title={t('nav.logout')}
-                className="min-w-11 min-h-11 rounded-xl p-2.5 flex items-center justify-center text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer active:scale-95 touch-manipulation"
+                className="min-w-9 min-h-9 sm:min-w-11 sm:min-h-11 rounded-xl p-2 sm:p-2.5 flex items-center justify-center text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer active:scale-95 touch-manipulation"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>

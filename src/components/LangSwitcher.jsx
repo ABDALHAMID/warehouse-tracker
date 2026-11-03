@@ -50,16 +50,16 @@ export default function LangSwitcher({ className = '' }) {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label="Select Language"
-        className="flex items-center gap-2 min-h-11 px-3 py-2 rounded-xl text-sm font-semibold
+        className="flex items-center gap-1 sm:gap-2 min-h-9 sm:min-h-11 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold
           bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700
           text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700
           transition-colors duration-150 active:scale-95 cursor-pointer touch-manipulation select-none"
       >
-        <Globe className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-        <span className="hidden xs:inline-block">{currentLang.flag}</span>
-        <span className="font-bold">{currentLang.short}</span>
+        <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+        <span className="hidden sm:inline-block">{currentLang.flag}</span>
+        <span className="font-bold text-xs sm:text-sm">{currentLang.short}</span>
         <ChevronDown
-          className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${
+          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 transition-transform duration-200 shrink-0 ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
