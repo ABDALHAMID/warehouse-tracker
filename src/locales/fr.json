@@ -12,7 +12,8 @@
     "logout": "Déconnexion",
     "worker": "Opérateur",
     "offlineNotice": "Mode Démo / Hors-ligne",
-    "liveConnected": "Supabase Connecté"
+    "liveConnected": "Supabase Connecté",
+    "profile": "Profil"
   },
   "theme": {
     "switchToDark": "Passer au Mode Sombre",
@@ -28,8 +29,10 @@
   "login": {
     "title": "Accès Opérateur",
     "subtitle": "Connectez-vous pour gérer l'inventaire et scanner les matériaux",
-    "emailLabel": "Adresse Email",
-    "emailPlaceholder": "operateur@depot.com",
+    "workerCodeLabel": "Nom ou Code Employé",
+    "workerCodePlaceholder": "ex: karim ou W-102",
+    "emailLabel": "Nom ou Code Employé",
+    "emailPlaceholder": "ex: karim ou W-102",
     "passwordLabel": "Mot de Passe",
     "passwordPlaceholder": "••••••••",
     "signInButton": "Se Connecter au Dépôt",
@@ -115,7 +118,8 @@
     "logQty": "Quantité",
     "logWorker": "Opérateur",
     "logDate": "Date & Heure",
-    "logNotes": "Remarques"
+    "logNotes": "Remarques",
+    "typeAdjustment": "Ajustement de Stock"
   },
   "scanner": {
     "title": "Scanner Code-barres & QR",
@@ -175,5 +179,39 @@
     "active": "Actif",
     "connected": "Connecté",
     "disconnected": "Déconnecté"
+  },
+  "roles": {
+    "admin": "Admin",
+    "manager": "Responsable",
+    "worker": "Magasinier",
+    "viewer": "Lecteur"
+  },
+  "profile": {
+    "title": "Profil Employé",
+    "profile": "Profil",
+    "my_details": "Mes Informations",
+    "full_name": "Nom Complet",
+    "worker_code": "Code Employé",
+    "role": "Rôle",
+    "assigned_zone": "Zone Assignée",
+    "phone": "Téléphone",
+    "last_seen": "Dernière Activité",
+    "never": "Jamais",
+    "preferred_language": "Langue Préférée",
+    "preferred_theme": "Thème Préféré",
+    "theme_light": "Clair",
+    "theme_dark": "Sombre",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "saved": "Profil mis à jour avec succès.",
+    "save_error": "Impossible d'enregistrer. Veuillez réessayer.",
+    "edit": "Modifier",
+    "warehouse_team": "Équipe du Dépôt",
+    "team_load_error": "Impossible de charger l'équipe du dépôt.",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "account_deactivated": "Votre compte a été désactivé. Contactez votre responsable de dépôt.",
+    "read_only_mode": "Mode lecture seule — modification du stock non autorisée",
+    "no_profile": "Aucun profil employé n'est lié à ce compte. Demandez à un responsable d'en créer un."
   }
 }

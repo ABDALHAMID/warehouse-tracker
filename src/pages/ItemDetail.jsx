@@ -19,12 +19,14 @@ import {
   TrendingDown,
   Truck,
   HardHat,
+  Lock,
+  SlidersHorizontal,
 } from 'lucide-react'
 
 export default function ItemDetail() {
   const { id } = useParams()
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, profile, canModifyStock } = useAuth()
 
   const [item, setItem] = useState(null)
   const [logs, setLogs] = useState([])
@@ -88,6 +90,7 @@ export default function ItemDetail() {
   }
 
   const handleOpenAction = (type) => {
+    if (!canModifyStock) return
     setActiveAction(type)
     setQuantity(10)
     setNotes('')
@@ -97,14 +100,15 @@ export default function ItemDetail() {
 
   const handleConfirmAdjustment = async (e) => {
     e.preventDefault()
-    if (!activeAction || quantity <= 0) return
+    if (!activeAction || quantity <= 0 || !canModifyStock) return
 
     setSubmitting(true)
     setActionError(null)
     setActionSuccess(null)
 
-    const workerId = user?.id || 'w-101'
-    const workerName = user?.user_metadata?.full_name || user?.email || 'Warehouse Worker'
+    // inventory_logs.worker_id references worker_profiles(id) = auth.users.id
+    const workerId = profile?.id || user?.id
+    const workerName = profile?.full_name || user?.email || 'Warehouse Worker'
 
     // CORE SPECIFICATION:
     // Insert a row into the inventory_logs table (item_id, worker_id, change_type, quantity).
@@ -299,7 +303,13 @@ export default function ItemDetail() {
           </div>
         </div>
 
-        {/* CORE SPECIFICATION: Large IN (Add Stock) & OUT (Remove Stock) Buttons */}
+        {/* CORE SPECIFICATION: Large IN (Add Stock) & OUT (Remove Stock) Buttons (RBAC-gated) */}
+        {!canModifyStock ? (
+          <div className="flex items-center justify-center gap-2 p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/70 border border-dashed border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300">
+            <Lock className="w-4 h-4 shrink-0" />
+            <span>{t('profile.read_only_mode')}</span>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
           {/* Large Green Button: ADD STOCK / IN */}
           <button
@@ -343,6 +353,7 @@ export default function ItemDetail() {
             </div>
           </button>
         </div>
+        )}
       </div>
 
       {/* Stock Adjustment Modal / Drawer */}
@@ -511,7 +522,16 @@ export default function ItemDetail() {
         ) : (
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-sm">
             {logs.map((log) => {
+              const isAdjustment = log.change_type === 'ADJUSTMENT'
               const isAdd = log.change_type === 'IN'
+              const typeLabel = isAdjustment
+                ? t('itemDetail.typeAdjustment')
+                : isAdd
+                ? t('itemDetail.typeIn')
+                : t('itemDetail.typeOut')
+              const workerLabel = log.worker?.full_name
+                ? `${log.worker.full_name}${log.worker.worker_code ? ` (${log.worker.worker_code})` : ''}`
+                : log.worker_name || log.worker_id
               return (
                 <div
                   key={log.id}
@@ -520,12 +540,16 @@ export default function ItemDetail() {
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        isAdd
+                        isAdjustment
+                          ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400'
+                          : isAdd
                           ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400'
                           : 'bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400'
                       }`}
                     >
-                      {isAdd ? (
+                      {isAdjustment ? (
+                        <SlidersHorizontal className="w-5 h-5" />
+                      ) : isAdd ? (
                         <TrendingUp className="w-5 h-5" />
                       ) : (
                         <TrendingDown className="w-5 h-5" />
@@ -534,12 +558,12 @@ export default function ItemDetail() {
 
                     <div>
                       <div className="text-sm font-bold text-slate-900 dark:text-white">
-                        {isAdd ? t('itemDetail.typeIn') : t('itemDetail.typeOut')}
+                        {typeLabel}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 flex-wrap">
                         <span className="flex items-center gap-1">
                           <HardHat className="w-3 h-3 text-amber-500" />
-                          {log.worker_name || log.worker_id}
+                          {workerLabel}
                         </span>
                         <span>•</span>
                         <span>{new Date(log.created_at).toLocaleString()}</span>
@@ -555,12 +579,14 @@ export default function ItemDetail() {
 
                   <div
                     className={`text-lg font-black shrink-0 ${
-                      isAdd
+                      isAdjustment
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : isAdd
                         ? 'text-emerald-600 dark:text-emerald-400'
                         : 'text-red-600 dark:text-red-400'
                     }`}
                   >
-                    {isAdd ? `+${log.quantity}` : `-${log.quantity}`}{' '}
+                    {isAdjustment ? log.quantity : isAdd ? `+${log.quantity}` : `-${log.quantity}`}{' '}
                     <span className="text-xs font-semibold text-slate-400">
                       {t(`common.units.${item.unit}`, item.unit)}
                     </span>

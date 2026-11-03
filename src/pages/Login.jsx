@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
 import LangSwitcher from '../components/LangSwitcher'
-import { Boxes, Lock, Mail, ArrowRight, HardHat, AlertCircle } from 'lucide-react'
+import { Boxes, Lock, User, ArrowRight, HardHat, AlertCircle } from 'lucide-react'
 
 export default function Login() {
   const { t } = useTranslation()
-  const { signIn, signInAsDemo } = useAuth()
+  const { signIn, signInAsDemo, authError, clearAuthError } = useAuth()
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState('')
+  const [workerCode, setWorkerCode] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
@@ -19,17 +19,28 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMsg(null)
+    clearAuthError()
     setLoading(true)
 
-    const { error } = await signIn(email, password)
+    // Convert input to lowercase trimmed worker code and append dummy domain
+    const formattedEmail = `${workerCode.trim().toLowerCase()}@warehouse.local`
+    const { error } = await signIn(formattedEmail, password)
     setLoading(false)
 
     if (error) {
-      setErrorMsg(t('login.invalidCredentials'))
+      setErrorMsg(
+        error.message === 'account_deactivated'
+          ? t('profile.account_deactivated')
+          : t('login.invalidCredentials')
+      )
     } else {
       navigate('/')
     }
   }
+
+  // Shown when an existing session was signed out because the account is inactive
+  const displayError =
+    errorMsg || (authError === 'account_deactivated' ? t('profile.account_deactivated') : null)
 
   const handleDemoLogin = (name, role) => {
     signInAsDemo(name, role)
@@ -69,10 +80,10 @@ export default function Login() {
           </div>
 
           {/* Error Alert */}
-          {errorMsg && (
+          {displayError && (
             <div className="mb-5 p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 flex items-center gap-3 text-sm font-semibold animate-in fade-in">
               <AlertCircle className="w-5 h-5 shrink-0 text-red-500" />
-              <span>{errorMsg}</span>
+              <span>{displayError}</span>
             </div>
           )}
 
@@ -80,22 +91,22 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
-                htmlFor="worker-email"
+                htmlFor="worker-code"
                 className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
               >
-                {t('login.emailLabel')}
+                {t('login.workerCodeLabel', 'Worker Name or Code')}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none text-slate-400">
-                  <Mail className="w-5 h-5" />
+                  <User className="w-5 h-5" />
                 </div>
                 <input
-                  id="worker-email"
-                  type="email"
+                  id="worker-code"
+                  type="text"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('login.emailPlaceholder')}
+                  value={workerCode}
+                  onChange={(e) => setWorkerCode(e.target.value)}
+                  placeholder={t('login.workerCodePlaceholder', 'e.g. karim or W-102')}
                   className="w-full ps-11 pe-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-base font-medium transition-all"
                 />
               </div>

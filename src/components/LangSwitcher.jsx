@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Globe, Check, ChevronDown } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const LANGUAGES = [
   { code: 'en', label: 'English', short: 'EN', flag: '🇬🇧', dir: 'ltr' },
@@ -11,6 +12,7 @@ const LANGUAGES = [
 
 export default function LangSwitcher({ className = '' }) {
   const { i18n } = useTranslation()
+  const { user, profile, isDemoUser, updateOwnProfile } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -33,6 +35,12 @@ export default function LangSwitcher({ className = '' }) {
   const handleSelectLanguage = (code) => {
     i18n.changeLanguage(code)
     setIsOpen(false)
+    // Persist for authenticated workers (skipped on the login page and in demo mode)
+    if (user && profile && !isDemoUser && profile.preferred_language !== code) {
+      updateOwnProfile({ preferred_language: code }).then(({ error }) => {
+        if (error) console.warn('Failed to persist preferred_language:', error.message)
+      })
+    }
   }
 
   return (

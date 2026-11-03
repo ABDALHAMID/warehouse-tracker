@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import InventoryList from './pages/InventoryList'
 import ItemDetail from './pages/ItemDetail'
 import ScanView from './pages/ScanView'
+import Profile from './pages/Profile'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -67,6 +68,7 @@ export default function App() {
         <Route path="inventory" element={<InventoryList />} />
         <Route path="item/:id" element={<ItemDetail />} />
         <Route path="scan" element={<ScanView />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
 
       {/* Catch-all fallback */}

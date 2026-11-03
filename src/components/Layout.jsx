@@ -11,12 +11,15 @@ import {
   HardHat,
   Radio,
   WifiOff,
+  UserCircle,
+  MapPin,
 } from 'lucide-react'
 import { isSupabaseConfigured } from '../lib/supabaseClient'
+import { getRoleBadgeClasses } from '../lib/workerProfiles'
 
 export default function Layout() {
   const { t } = useTranslation()
-  const { user, signOut, isDemoUser } = useAuth()
+  const { user, profile, signOut, isDemoUser } = useAuth()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -25,9 +28,13 @@ export default function Layout() {
   }
 
   const workerName =
+    profile?.full_name ||
     user?.user_metadata?.full_name ||
     user?.email?.split('@')[0] ||
     t('nav.worker')
+  const workerCode = profile?.worker_code
+  const workerRole = profile?.role
+  const workerZone = profile?.assigned_zone
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
@@ -108,6 +115,20 @@ export default function Layout() {
               <ScanBarcode className="w-4 h-4" />
               {t('nav.scan')}
             </NavLink>
+
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`
+              }
+            >
+              <UserCircle className="w-4 h-4" />
+              {t('nav.profile')}
+            </NavLink>
           </nav>
 
           {/* Controls: Lang + Theme + Worker & Logout */}
@@ -117,13 +138,39 @@ export default function Layout() {
 
             {/* Worker Badge & Logout Button */}
             <div className="flex items-center ps-1 sm:ps-2 border-s border-slate-200 dark:border-slate-800 gap-1.5">
-              <div
-                title={workerName}
-                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200"
+              <NavLink
+                to="/profile"
+                title={workerCode ? `${workerName} (${workerCode})` : workerName}
+                aria-label={t('nav.profile')}
+                className="flex items-center gap-2 min-h-11 px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer active:scale-95 touch-manipulation"
               >
-                <HardHat className="w-3.5 h-3.5 text-amber-500" />
-                <span className="max-w-[120px] truncate">{workerName}</span>
-              </div>
+                <HardHat className="w-4 h-4 text-amber-500 shrink-0" />
+                <div className="hidden sm:flex flex-col leading-tight min-w-0">
+                  <span className="max-w-[130px] truncate font-bold">
+                    {workerName}
+                    {workerCode && (
+                      <span className="ms-1 font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                        {workerCode}
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex items-center gap-1.5 mt-0.5">
+                    {workerRole && (
+                      <span
+                        className={`px-1.5 py-px rounded border text-[9px] font-black uppercase tracking-wider ${getRoleBadgeClasses(workerRole)}`}
+                      >
+                        {t(`roles.${workerRole}`, workerRole)}
+                      </span>
+                    )}
+                    {workerZone && (
+                      <span className="flex items-center gap-0.5 text-[10px] text-slate-500 dark:text-slate-400 max-w-[90px] truncate">
+                        <MapPin className="w-2.5 h-2.5 shrink-0" />
+                        {workerZone}
+                      </span>
+                    )}
+                  </span>
+                </div>
+              </NavLink>
 
               <button
                 type="button"
@@ -146,7 +193,7 @@ export default function Layout() {
 
       {/* Mobile Bottom Navigation Bar (Optimized for one-handed warehouse operation) */}
       <nav className="md:hidden fixed bottom-0 start-0 end-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 px-3 py-2 shadow-lg">
-        <div className="max-w-md mx-auto grid grid-cols-3 gap-2 items-center">
+        <div className="max-w-md mx-auto grid grid-cols-4 gap-2 items-center">
           {/* Dashboard Tab */}
           <NavLink
             to="/"
@@ -191,6 +238,21 @@ export default function Layout() {
           >
             <Boxes className="w-6 h-6 mb-1" />
             <span className="text-xs truncate">{t('nav.inventory')}</span>
+          </NavLink>
+
+          {/* Profile Tab */}
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${
+                isActive
+                  ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
+                  : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
+              }`
+            }
+          >
+            <UserCircle className="w-6 h-6 mb-1" />
+            <span className="text-xs truncate">{t('nav.profile')}</span>
           </NavLink>
         </div>
       </nav>

@@ -12,7 +12,8 @@
     "logout": "خروج",
     "worker": "الخدام / المعلم",
     "offlineNotice": "مود تجريبي بلا ويفي",
-    "liveConnected": "كونيكطي مباشر مع سوبابيز"
+    "liveConnected": "كونيكطي مباشر مع سوبابيز",
+    "profile": "البروفايل"
   },
   "theme": {
     "switchToDark": "دير المود المظلم",
@@ -28,8 +29,10 @@
   "login": {
     "title": "دخول الخدامة للديبو",
     "subtitle": "دخل لحسابك باش تفيريفي السلعة وتسكاني الكودبار",
-    "emailLabel": "الإيميل ديالك",
-    "emailPlaceholder": "khadam@depot.ma",
+    "workerCodeLabel": "سمية الخدام ولا الكود",
+    "workerCodePlaceholder": "مثال: karim ولا W-102",
+    "emailLabel": "سمية الخدام ولا الكود",
+    "emailPlaceholder": "مثال: karim ولا W-102",
     "passwordLabel": "المودباس",
     "passwordPlaceholder": "••••••••",
     "signInButton": "دخل للديبو",
@@ -115,7 +118,8 @@
     "logQty": "الكمية",
     "logWorker": "الخدام لي سجلها",
     "logDate": "التاريخ والساعة",
-    "logNotes": "الملاحظات"
+    "logNotes": "الملاحظات",
+    "typeAdjustment": "تصحيح الستوك"
   },
   "scanner": {
     "title": "سكاني الكودبار وQR",
@@ -175,5 +179,39 @@
     "active": "خدام",
     "connected": "مكانيكطي",
     "disconnected": "مقطوع"
+  },
+  "roles": {
+    "admin": "لادمين",
+    "manager": "المسؤول",
+    "worker": "الخدام",
+    "viewer": "غير كيشوف"
+  },
+  "profile": {
+    "title": "بروفايل الخدام",
+    "profile": "البروفايل",
+    "my_details": "المعلومات ديالي",
+    "full_name": "السمية الكاملة",
+    "worker_code": "الكود ديال الخدام",
+    "role": "الدور",
+    "assigned_zone": "البلاصة لي خدام فيها",
+    "phone": "التيليفون",
+    "last_seen": "آخر مرة دخل",
+    "never": "عمرو",
+    "preferred_language": "اللغة لي بغيتي",
+    "preferred_theme": "الثيم لي بغيتي",
+    "theme_light": "فاتح",
+    "theme_dark": "غامق",
+    "save": "سجل التبديلات",
+    "saving": "كنسجلو...",
+    "saved": "البروفايل تبدل مزيان.",
+    "save_error": "ما قدرناش نسجلو. عاود جرب.",
+    "edit": "بدل",
+    "warehouse_team": "الفرقة ديال الديبو",
+    "team_load_error": "ما قدرناش نجيبو الفرقة ديال الديبو.",
+    "active": "خدام",
+    "inactive": "موقوف",
+    "account_deactivated": "الحساب ديالك توقف. تواصل مع المسؤول ديال الديبو.",
+    "read_only_mode": "غير القراية — ما تقدرش تبدل الستوك",
+    "no_profile": "ما كاين حتى بروفايل مربوط بهاد الحساب. قول للمسؤول يزيدو."
   }
 }

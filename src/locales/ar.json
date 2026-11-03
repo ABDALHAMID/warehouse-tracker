@@ -12,7 +12,8 @@
     "logout": "تسجيل الخروج",
     "worker": "العامل",
     "offlineNotice": "الوضع التجريبي / بدون إنترنت",
-    "liveConnected": "متصل مباشرة بسوبابيز"
+    "liveConnected": "متصل مباشرة بسوبابيز",
+    "profile": "الملف الشخصي"
   },
   "theme": {
     "switchToDark": "التبديل إلى الوضع الداكن",
@@ -28,8 +29,10 @@
   "login": {
     "title": "دخول عمال المستودع",
     "subtitle": "قم بتسجيل الدخول للوصول إلى إدارة مواد البناء ومسح الباركود",
-    "emailLabel": "البريد الإلكتروني",
-    "emailPlaceholder": "worker@warehouse.com",
+    "workerCodeLabel": "اسم العامل أو الرمز",
+    "workerCodePlaceholder": "مثال: karim أو W-102",
+    "emailLabel": "اسم العامل أو الرمز",
+    "emailPlaceholder": "مثال: karim أو W-102",
     "passwordLabel": "كلمة المرور",
     "passwordPlaceholder": "••••••••",
     "signInButton": "تسجيل الدخول إلى المستودع",
@@ -115,7 +118,8 @@
     "logQty": "الكمية",
     "logWorker": "العامل المسؤول",
     "logDate": "التاريخ والوقت",
-    "logNotes": "الملاحظات"
+    "logNotes": "الملاحظات",
+    "typeAdjustment": "تسوية المخزون"
   },
   "scanner": {
     "title": "ماسح الباركود ورمز الاستجابة السريعة",
@@ -175,5 +179,39 @@
     "active": "نشط",
     "connected": "متصل",
     "disconnected": "غير متصل"
+  },
+  "roles": {
+    "admin": "مدير النظام",
+    "manager": "مسؤول",
+    "worker": "عامل",
+    "viewer": "مشاهد"
+  },
+  "profile": {
+    "title": "ملف العامل",
+    "profile": "الملف الشخصي",
+    "my_details": "معلوماتي",
+    "full_name": "الاسم الكامل",
+    "worker_code": "رمز العامل",
+    "role": "الدور",
+    "assigned_zone": "المنطقة المخصصة",
+    "phone": "الهاتف",
+    "last_seen": "آخر نشاط",
+    "never": "أبداً",
+    "preferred_language": "اللغة المفضلة",
+    "preferred_theme": "المظهر المفضل",
+    "theme_light": "فاتح",
+    "theme_dark": "داكن",
+    "save": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ...",
+    "saved": "تم تحديث الملف الشخصي بنجاح.",
+    "save_error": "تعذر حفظ التغييرات. حاول مرة أخرى.",
+    "edit": "تعديل",
+    "warehouse_team": "فريق المستودع",
+    "team_load_error": "تعذر تحميل فريق المستودع.",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "account_deactivated": "تم تعطيل حسابك. يرجى التواصل مع مسؤول المستودع.",
+    "read_only_mode": "وضع القراءة فقط — لا يمكنك تعديل المخزون",
+    "no_profile": "لا يوجد ملف عامل مرتبط بهذا الحساب. اطلب من المسؤول إنشاءه."
   }
 }

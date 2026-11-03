@@ -12,7 +12,8 @@
     "logout": "Logout",
     "worker": "Worker",
     "offlineNotice": "Demo / Offline Mode",
-    "liveConnected": "Supabase Live"
+    "liveConnected": "Supabase Live",
+    "profile": "Profile"
   },
   "theme": {
     "switchToDark": "Switch to Dark Mode",
@@ -28,8 +29,10 @@
   "login": {
     "title": "Worker Sign In",
     "subtitle": "Log in to access warehouse inventory & scan materials",
-    "emailLabel": "Email Address",
-    "emailPlaceholder": "worker@warehouse.com",
+    "workerCodeLabel": "Worker Name or Code",
+    "workerCodePlaceholder": "e.g. karim or W-102",
+    "emailLabel": "Worker Name or Code",
+    "emailPlaceholder": "e.g. karim or W-102",
     "passwordLabel": "Password",
     "passwordPlaceholder": "••••••••",
     "signInButton": "Sign In to Warehouse",
@@ -115,7 +118,8 @@
     "logQty": "Quantity",
     "logWorker": "Worker",
     "logDate": "Date & Time",
-    "logNotes": "Notes"
+    "logNotes": "Notes",
+    "typeAdjustment": "Stock Adjustment"
   },
   "scanner": {
     "title": "Barcode & QR Scanner",
@@ -175,5 +179,39 @@
     "active": "Active",
     "connected": "Connected",
     "disconnected": "Disconnected"
+  },
+  "roles": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "worker": "Worker",
+    "viewer": "Viewer"
+  },
+  "profile": {
+    "title": "Worker Profile",
+    "profile": "Profile",
+    "my_details": "My Details",
+    "full_name": "Full Name",
+    "worker_code": "Worker Code",
+    "role": "Role",
+    "assigned_zone": "Assigned Zone",
+    "phone": "Phone",
+    "last_seen": "Last Seen",
+    "never": "Never",
+    "preferred_language": "Preferred Language",
+    "preferred_theme": "Preferred Theme",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "saved": "Profile updated successfully.",
+    "save_error": "Could not save changes. Please try again.",
+    "edit": "Edit",
+    "warehouse_team": "Warehouse Team",
+    "team_load_error": "Could not load the warehouse team.",
+    "active": "Active",
+    "inactive": "Inactive",
+    "account_deactivated": "Your account has been deactivated. Please contact your warehouse manager.",
+    "read_only_mode": "Read-only mode — you cannot modify stock",
+    "no_profile": "No worker profile is linked to this account. Ask a manager to create one."
   }
 }
