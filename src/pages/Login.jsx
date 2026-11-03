@@ -1,0 +1,177 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { useAuth } from '../context/AuthContext'
+import ThemeToggle from '../components/ThemeToggle'
+import LangSwitcher from '../components/LangSwitcher'
+import { Boxes, Lock, Mail, ArrowRight, HardHat, AlertCircle } from 'lucide-react'
+
+export default function Login() {
+  const { t } = useTranslation()
+  const { signIn, signInAsDemo } = useAuth()
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(null)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMsg(null)
+    setLoading(true)
+
+    const { error } = await signIn(email, password)
+    setLoading(false)
+
+    if (error) {
+      setErrorMsg(t('login.invalidCredentials'))
+    } else {
+      navigate('/')
+    }
+  }
+
+  const handleDemoLogin = (name, role) => {
+    signInAsDemo(name, role)
+    navigate('/')
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col justify-between bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 transition-colors">
+      {/* Top Bar with Language and Theme Controls */}
+      <header className="max-w-md w-full mx-auto flex items-center justify-between py-2">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md">
+            <Boxes className="w-5 h-5" />
+          </div>
+          <span className="font-extrabold text-base tracking-tight">{t('app.title')}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <LangSwitcher />
+          <ThemeToggle />
+        </div>
+      </header>
+
+      {/* Main Login Card */}
+      <div className="max-w-md w-full mx-auto my-auto py-6">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
+          {/* Header Title */}
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 mx-auto flex items-center justify-center mb-3 border border-blue-200 dark:border-blue-900 shadow-inner">
+              <HardHat className="w-9 h-9 text-amber-500" />
+            </div>
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-1">
+              {t('login.title')}
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {t('login.subtitle')}
+            </p>
+          </div>
+
+          {/* Error Alert */}
+          {errorMsg && (
+            <div className="mb-5 p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 flex items-center gap-3 text-sm font-semibold animate-in fade-in">
+              <AlertCircle className="w-5 h-5 shrink-0 text-red-500" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="worker-email"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
+              >
+                {t('login.emailLabel')}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <input
+                  id="worker-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t('login.emailPlaceholder')}
+                  className="w-full ps-11 pe-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-base font-medium transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="worker-password"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
+              >
+                {t('login.passwordLabel')}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <input
+                  id="worker-password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={t('login.passwordPlaceholder')}
+                  className="w-full ps-11 pe-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-base font-medium transition-all"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full min-h-14 mt-2 px-5 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-base shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all disabled:opacity-70 touch-manipulation"
+            >
+              {loading ? (
+                <span>{t('login.signingIn')}</span>
+              ) : (
+                <>
+                  <span>{t('login.signInButton')}</span>
+                  <ArrowRight className="w-5 h-5 rtl:rotate-180" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Quick Demo Login Option */}
+          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 text-center">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-medium">
+              {t('login.demoWorkerHint')}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('Karim Bennani', 'Warehouse Yard Lead')}
+                className="w-full min-h-12 px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all touch-manipulation"
+              >
+                <HardHat className="w-4 h-4 text-amber-500 shrink-0" />
+                <span>Karim (Yard Lead)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('Said Idrissi', 'Materials Operator')}
+                className="w-full min-h-12 px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all touch-manipulation"
+              >
+                <HardHat className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span>Said (Operator)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Info */}
+      <footer className="text-center text-xs text-slate-400 dark:text-slate-500 py-3">
+        {t('app.tagline')}
+      </footer>
+    </div>
+  )
+}
