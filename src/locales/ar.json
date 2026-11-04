@@ -63,12 +63,24 @@
     "restockNow": "إدارة المخزون",
     "recentActivityTitle": "حركات المستودع الأخيرة",
     "noRecentActivity": "لم يتم تسجيل حركات صرف أو توريد اليوم.",
-    "viewAll": "عرض الكل"
+    "viewAll": "عرض الكل",
+    "lastWarehouseActivity": "آخر حركة في المستودع",
+    "yourLastActivity": "آخر حركة لك",
+    "yourPreviousActivity": "حركتك السابقة",
+    "byYou": "بواسطتك",
+    "clickToAdjust": "اضغط لتعديل المخزون",
+    "noGlobalActivity": "لم يتم تسجيل أي حركات مخزون بعد.",
+    "noUserActivityTitle": "لا توجد حركات مسجلة بواسطتك بعد",
+    "noUserActivityDesc": "المواد التي تستلمها أو تخرجها ستظهر هنا للوصول السريع.",
+    "adjustStockModalTitle": "تعديل سريع للمخزون",
+    "newStockPreview": "المخزون الجديد بعد التعديل",
+    "confirmAdjustment": "تأكيد التعديل",
+    "notesPlaceholder": "ملاحظة اختيارية (رقم الإذن، المورد، العميل...)"
   },
   "inventory": {
     "title": "مخزون مواد البناء",
     "subtitle": "البحث، التصفية وتتبع مخزون الورشة والمستودع",
-    "searchPlaceholder": "ابحث باسم المادة أو كود الباركود SKU...",
+    "searchPlaceholder": "ابحث باسم المادة...",
     "allCategories": "جميع الأصناف",
     "filterStatus": "حالة التوفر",
     "allStatus": "كل الحالات",
@@ -124,6 +136,8 @@
   "scanner": {
     "title": "ماسح الباركود ورمز الاستجابة السريعة",
     "subtitle": "وجّه كاميرا الهاتف نحو باركود مادة البناء",
+    "frozenTitle": "الماسح الضوئي متوقف مؤقتاً",
+    "frozenDesc": "تم تجميد خاصية مسح الباركود وQR مؤقتاً، وسيتم تفعيلها في تحديث قادم.",
     "instruction": "ضع الباركود داخل إطار الكاميرا (EAN, UPC, Code 128, QR)",
     "cameraLoading": "جارٍ تشغيل مستشعر الكاميرا...",
     "cameraError": "تعذر الوصول إلى الكاميرا. يرجى منح الإذن أو إدخال الرمز يدويًا أدناه.",
@@ -151,7 +165,8 @@
     "timber_formwork": "أخشاب القوالب والنجارة الإنشائية",
     "plumbing_drainage": "الأنابيب والسباكة والصرف الصحي",
     "paints_waterproofing": "الدهانات ومواد العزل المائي",
-    "tiles_finishes": "البلاط ومواد اللصق والتشطيب"
+    "tiles_finishes": "البلاط ومواد اللصق والتشطيب",
+    "poutrelles": "روافد خرسانية مسبقة الإجهاد (بوتريل)"
   },
   "common": {
     "units": {

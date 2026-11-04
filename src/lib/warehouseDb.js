@@ -220,33 +220,138 @@ export const warehouseDb = {
     }
 
     try {
+      // 1. Primary: Join with items and worker_profiles
       const { data, error } = await supabase
         .from('inventory_logs')
-        .select('*, items(name, sku, unit), worker:worker_profiles(full_name, worker_code, role)')
+        .select(
+          '*, items(id, name, sku, unit, current_stock, min_stock_level, location_bin, category_id), worker:worker_profiles(full_name, worker_code, role)'
+        )
         .order('created_at', { ascending: false })
         .limit(limit)
 
-      if (error) {
-        console.warn('Worker join on recent logs failed, falling back:', error.message)
-        const { data: simpleData, error: simpleError } = await supabase
-          .from('inventory_logs')
-          .select('*, items(name, sku, unit)')
-          .order('created_at', { ascending: false })
-          .limit(limit)
-
-        if (simpleError) {
-          console.error('Supabase recent logs fetch error:', simpleError.message)
-          return { data: [], error: simpleError }
+      if (!error && data) {
+        return {
+          data: data.map((log) => ({
+            ...log,
+            items: log.items ? normalizeItem(log.items) : null,
+          })),
+          error: null,
         }
-
-        return { data: simpleData || [], error: null }
       }
 
-      return { data: data || [], error: null }
+      console.warn('Worker join on recent logs failed, attempting items-only join:', error?.message)
+
+      // 2. Secondary fallback: join with items only
+      const { data: itemData, error: itemError } = await supabase
+        .from('inventory_logs')
+        .select(
+          '*, items(id, name, sku, unit, current_stock, min_stock_level, location_bin, category_id)'
+        )
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (!itemError && itemData) {
+        return {
+          data: itemData.map((log) => ({
+            ...log,
+            items: log.items ? normalizeItem(log.items) : null,
+          })),
+          error: null,
+        }
+      }
+
+      console.warn('Items join on recent logs failed, falling back to simple select:', itemError?.message)
+
+      // 3. Robust tertiary fallback: select * without any joins
+      const { data: simpleData, error: simpleError } = await supabase
+        .from('inventory_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (simpleError) {
+        console.error('Supabase recent logs fetch error:', simpleError.message)
+        return { data: [], error: simpleError }
+      }
+
+      return { data: simpleData || [], error: null }
     } catch (err) {
       console.error('Supabase recent logs fetch error:', err)
       return { data: [], error: err }
     }
+  },
+
+  // Fetch recent logs by a specific worker (up to limit)
+  async fetchRecentLogsForWorker(workerId, limit = 10) {
+    if (!isSupabaseConfigured || !workerId) {
+      return { data: [], error: null }
+    }
+
+    try {
+      // 1. Primary: full join
+      const { data, error } = await supabase
+        .from('inventory_logs')
+        .select(
+          '*, items(id, name, sku, unit, current_stock, min_stock_level, location_bin, category_id), worker:worker_profiles(full_name, worker_code, role)'
+        )
+        .eq('worker_id', workerId)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (!error && data) {
+        return {
+          data: data.map((log) => ({
+            ...log,
+            items: log.items ? normalizeItem(log.items) : null,
+          })),
+          error: null,
+        }
+      }
+
+      // 2. Secondary: items only
+      const { data: itemData, error: itemError } = await supabase
+        .from('inventory_logs')
+        .select(
+          '*, items(id, name, sku, unit, current_stock, min_stock_level, location_bin, category_id)'
+        )
+        .eq('worker_id', workerId)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (!itemError && itemData) {
+        return {
+          data: itemData.map((log) => ({
+            ...log,
+            items: log.items ? normalizeItem(log.items) : null,
+          })),
+          error: null,
+        }
+      }
+
+      // 3. Robust tertiary fallback: simple select
+      const { data: simpleData, error: simpleError } = await supabase
+        .from('inventory_logs')
+        .select('*')
+        .eq('worker_id', workerId)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (simpleError) {
+        console.error('Supabase fetchRecentLogsForWorker error:', simpleError.message)
+        return { data: [], error: simpleError }
+      }
+
+      return { data: simpleData || [], error: null }
+    } catch (err) {
+      console.error('Supabase fetchRecentLogsForWorker error:', err)
+      return { data: [], error: err }
+    }
+  },
+
+  // Backward-compatible single log fetch
+  async fetchLastLogForWorker(workerId) {
+    const res = await this.fetchRecentLogsForWorker(workerId, 1)
+    return { data: res.data?.[0] || null, error: res.error }
   },
 
   // Realtime subscription setup

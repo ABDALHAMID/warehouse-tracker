@@ -6,7 +6,6 @@ import LangSwitcher from './LangSwitcher'
 import {
   LayoutDashboard,
   Boxes,
-  ScanBarcode,
   LogOut,
   HardHat,
   UserCircle,
@@ -96,19 +95,6 @@ export default function Layout() {
               {t('nav.inventory')}
             </NavLink>
 
-            <NavLink
-              to="/scan"
-              className={({ isActive }) =>
-                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60'
-                }`
-              }
-            >
-              <ScanBarcode className="w-4 h-4" />
-              {t('nav.scan')}
-            </NavLink>
 
             <NavLink
               to="/profile"
@@ -187,7 +173,7 @@ export default function Layout() {
 
       {/* Mobile Bottom Navigation Bar (Optimized for one-handed warehouse operation) */}
       <nav className="md:hidden fixed bottom-0 start-0 end-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 px-3 py-2 shadow-lg">
-        <div className="max-w-md mx-auto grid grid-cols-4 gap-2 items-center">
+        <div className="max-w-md mx-auto grid grid-cols-3 gap-2 items-center">
           {/* Dashboard Tab */}
           <NavLink
             to="/"
@@ -202,21 +188,6 @@ export default function Layout() {
           >
             <LayoutDashboard className="w-6 h-6 mb-1" />
             <span className="text-xs truncate">{t('nav.dashboard')}</span>
-          </NavLink>
-
-          {/* Central Prominent SCAN Tab */}
-          <NavLink
-            to="/scan"
-            className={({ isActive }) =>
-              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 shadow-md ${
-                isActive
-                  ? 'bg-emerald-600 text-white font-extrabold shadow-emerald-600/30'
-                  : 'bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-emerald-500/20'
-              }`
-            }
-          >
-            <ScanBarcode className="w-6 h-6 mb-1" />
-            <span className="text-xs font-bold truncate">{t('nav.scan')}</span>
           </NavLink>
 
           {/* Inventory Tab */}

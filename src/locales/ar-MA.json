@@ -63,12 +63,24 @@
     "restockNow": "زيد السطوك",
     "recentActivityTitle": "حركات الديبو لخرة",
     "noRecentActivity": "ما تسجلات حتى حركة اليوم فالديبو.",
-    "viewAll": "شوف كولشي"
+    "viewAll": "شوف كولشي",
+    "lastWarehouseActivity": "آخر حركة فالديبو",
+    "yourLastActivity": "آخر حركة درتيها نتا",
+    "yourPreviousActivity": "الحركة السابقة ديالك",
+    "byYou": "من عندك",
+    "clickToAdjust": "كليكي باش تبدل السطوك",
+    "noGlobalActivity": "ما كاينا حتى حركة مسجلة دابا.",
+    "noUserActivityTitle": "مازال ما درتي حتى حركة",
+    "noUserActivityDesc": "السلعة لي غاتدخل ولا تخرج غاتبان هنا باش ترجع ليها بالزربة.",
+    "adjustStockModalTitle": "تبديل بالزربة د السطوك",
+    "newStockPreview": "السطوك الجديد من بعد التبدال",
+    "confirmAdjustment": "أكد التبدال",
+    "notesPlaceholder": "ملاحظة ختيارية (بون دي ليفريزون، فورنيسور، كليان...)"
   },
   "inventory": {
     "title": "ليستة السلعة فالديبو",
     "subtitle": "قلب، صفي وتبع سطوك الشانطي والديبو",
-    "searchPlaceholder": "قلب بالسمية د السلعة ولا الكود SKU...",
+    "searchPlaceholder": "قلب بالسمية د السلعة...",
     "allCategories": "كاع الأنواع",
     "filterStatus": "الحالة د السطوك",
     "allStatus": "كولشي",
@@ -124,6 +136,8 @@
   "scanner": {
     "title": "سكاني الكودبار وQR",
     "subtitle": "حط الكودبار وسط الكادر ديال الكاميرا",
+    "frozenTitle": "السكانير واقف دابا",
+    "frozenDesc": "حبسنا خاصية السكانير د الكودبار وQR مؤقتاً، وغادي نزيدوها من بعد إن شاء الله.",
     "instruction": "وجه الكاميرا للكودبار ديال المادة (EAN, UPC, Code 128, QR)",
     "cameraLoading": "كنخدمو الكاميرا دابا...",
     "cameraError": "ما قدرناش نخدمو الكاميرا. عطي الإذن بالوصول ولا كتب الكود بيديك لتحت.",
@@ -151,7 +165,8 @@
     "timber_formwork": "العود والكوفراج والمادري",
     "plumbing_drainage": "الرصاصة والبلومبري وجعاب",
     "paints_waterproofing": "الصباغة والكتامة وليدوفيج",
-    "tiles_finishes": "الزليج والكولا وفينيسيون"
+    "tiles_finishes": "الزليج والكولا وفينيسيون",
+    "poutrelles": "البوتريل د الدالة"
   },
   "common": {
     "units": {

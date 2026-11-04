@@ -63,12 +63,24 @@
     "restockNow": "Gérer le Stock",
     "recentActivityTitle": "Mouvements Récents au Dépôt",
     "noRecentActivity": "Aucun mouvement enregistré aujourd'hui.",
-    "viewAll": "Voir Tout"
+    "viewAll": "Voir Tout",
+    "lastWarehouseActivity": "Dernier mouvement de l'entrepôt",
+    "yourLastActivity": "Votre dernier mouvement",
+    "yourPreviousActivity": "Votre mouvement précédent",
+    "byYou": "Par vous",
+    "clickToAdjust": "Cliquer pour ajuster le stock",
+    "noGlobalActivity": "Aucun mouvement d'inventaire enregistré.",
+    "noUserActivityTitle": "Aucun mouvement par vous pour l'instant",
+    "noUserActivityDesc": "Les articles que vous réceptionnez ou sortez apparaîtront ici pour un accès rapide.",
+    "adjustStockModalTitle": "Ajustement Rapide du Stock",
+    "newStockPreview": "Nouveau stock après mise à jour",
+    "confirmAdjustment": "Confirmer l'Ajustement",
+    "notesPlaceholder": "Référence optionnelle (ex: BL, fournisseur, client...)"
   },
   "inventory": {
     "title": "Inventaire des Matériaux",
     "subtitle": "Recherche, filtrage et suivi des stocks du chantier",
-    "searchPlaceholder": "Rechercher par nom ou code-barres SKU...",
+    "searchPlaceholder": "Rechercher par nom de matériau...",
     "allCategories": "Toutes Catégories",
     "filterStatus": "Filtrer Statut",
     "allStatus": "Tous Statuts",
@@ -124,6 +136,8 @@
   "scanner": {
     "title": "Scanner Code-barres & QR",
     "subtitle": "Cadrez le code-barres dans le viseur de la caméra",
+    "frozenTitle": "Scanner Temporairement Suspendu",
+    "frozenDesc": "Le scan par code-barres et QR est en pause. Cette fonctionnalité sera réactivée très prochainement.",
     "instruction": "Pointez la caméra vers le code-barres (EAN, UPC, Code 128, QR)",
     "cameraLoading": "Activation du capteur caméra...",
     "cameraError": "Impossible d'accéder à la caméra. Autorisez l'accès ou saisissez le SKU manuellement.",
@@ -151,7 +165,8 @@
     "timber_formwork": "Bois de Coffrage & Charpente",
     "plumbing_drainage": "Plomberie & Assainissement",
     "paints_waterproofing": "Peinture & Étanchéité",
-    "tiles_finishes": "Carrelage & Revêtements"
+    "tiles_finishes": "Carrelage & Revêtements",
+    "poutrelles": "Poutrelles Précontraintes"
   },
   "common": {
     "units": {

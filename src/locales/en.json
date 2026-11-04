@@ -63,12 +63,24 @@
     "restockNow": "Manage Stock",
     "recentActivityTitle": "Recent Yard Movements",
     "noRecentActivity": "No stock transactions recorded today.",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "lastWarehouseActivity": "Last Warehouse Movement",
+    "yourLastActivity": "Your Last Movement",
+    "yourPreviousActivity": "Your Previous Movement",
+    "byYou": "By You",
+    "clickToAdjust": "Click to adjust stock",
+    "noGlobalActivity": "No inventory movements recorded yet.",
+    "noUserActivityTitle": "No movements by you yet",
+    "noUserActivityDesc": "Items you receive or dispatch will appear here for fast re-access.",
+    "adjustStockModalTitle": "Quick Stock Adjustment",
+    "newStockPreview": "New stock after update",
+    "confirmAdjustment": "Confirm Adjustment",
+    "notesPlaceholder": "Optional reference (e.g. BL, supplier, client...)"
   },
   "inventory": {
     "title": "Materials Inventory",
     "subtitle": "Search, filter, and track construction stock",
-    "searchPlaceholder": "Search by material name or SKU barcode...",
+    "searchPlaceholder": "Search by material name...",
     "allCategories": "All Categories",
     "filterStatus": "Filter Status",
     "allStatus": "All Status",
@@ -124,6 +136,8 @@
   "scanner": {
     "title": "Barcode & QR Scanner",
     "subtitle": "Align the barcode inside the camera viewfinder",
+    "frozenTitle": "Scanner Temporarily Frozen",
+    "frozenDesc": "Barcode and QR scanning is paused for now. This feature will be re-enabled in an upcoming release.",
     "instruction": "Point camera at material SKU barcode (EAN, UPC, Code 128, QR)",
     "cameraLoading": "Initializing camera sensor...",
     "cameraError": "Unable to access camera. Please allow camera permissions or enter SKU manually below.",
@@ -151,7 +165,8 @@
     "timber_formwork": "Timber & Formwork",
     "plumbing_drainage": "Plumbing & Drainage",
     "paints_waterproofing": "Paints & Waterproofing",
-    "tiles_finishes": "Tiles & Finishes"
+    "tiles_finishes": "Tiles & Finishes",
+    "poutrelles": "Prestressed Joists (Poutrelles)"
   },
   "common": {
     "units": {

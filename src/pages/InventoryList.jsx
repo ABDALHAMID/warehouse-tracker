@@ -249,9 +249,6 @@ export default function InventoryList() {
                 <div className="flex items-start justify-between gap-3 mb-2.5">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-extrabold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
-                        {item.sku}
-                      </span>
                       <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
                         {item.category_slug ? t(`categories.${item.category_slug}`, item.category) : item.category}
                       </span>
