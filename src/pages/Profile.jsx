@@ -65,10 +65,11 @@ function StatusAlert({ type, message }) {
   const ok = type === 'success'
   return (
     <div
-      className={`p-3 rounded-xl border text-sm font-bold flex items-center gap-2 animate-in fade-in duration-150 ${ok
+      className={`p-3 rounded-xl border text-sm font-bold flex items-center gap-2 animate-in fade-in duration-150 ${
+        ok
           ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
           : 'bg-red-50 dark:bg-red-950/60 border-red-300 dark:border-red-800 text-red-800 dark:text-red-300'
-        }`}
+      }`}
     >
       {ok ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
       <span>{message}</span>
