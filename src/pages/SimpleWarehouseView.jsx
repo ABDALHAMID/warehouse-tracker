@@ -353,10 +353,11 @@ export default function SimpleWarehouseView() {
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.slug)}
-                  className={`min-h-8 px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${active
+                  className={`min-h-8 px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
+                    active
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
+                  }`}
                 >
                   {cat.name}
                 </button>
@@ -399,10 +400,11 @@ export default function SimpleWarehouseView() {
             <button
               type="button"
               onClick={() => setSelectedLength('all')}
-              className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${selectedLength === 'all'
+              className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
+                selectedLength === 'all'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
+              }`}
             >
               {t('categories.all', 'All')}
             </button>
@@ -413,10 +415,11 @@ export default function SimpleWarehouseView() {
                   key={len}
                   type="button"
                   onClick={() => setSelectedLength(len)}
-                  className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-mono font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${active
+                  className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-mono font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
+                    active
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
+                  }`}
                 >
                   {len.toFixed(2)}m
                 </button>
@@ -498,12 +501,13 @@ export default function SimpleWarehouseView() {
                   style={{
                     animationDelay: `${Math.min(index * 25, 250)}ms`,
                   }}
-                  className={`group relative p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md cursor-pointer touch-manipulation select-none card-hover-smooth animate-in slide-in-from-bottom-4 duration-300 flex items-center gap-3 sm:gap-4 ${isJustUpdated
+                  className={`group relative p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md cursor-pointer touch-manipulation select-none card-hover-smooth animate-in slide-in-from-bottom-4 duration-300 flex items-center gap-3 sm:gap-4 ${
+                    isJustUpdated
                       ? 'ring-2 ring-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/40 shadow-lg shadow-emerald-500/20 highlight-flash'
                       : index === 0
-                        ? 'ring-1 ring-blue-500/30'
-                        : ''
-                    }`}
+                      ? 'ring-1 ring-blue-500/30'
+                      : ''
+                  }`}
                 >
                   {/* Symbolic SVG Icon */}
                   <ItemSymbol
@@ -553,12 +557,13 @@ export default function SimpleWarehouseView() {
                   {/* Right: Large Bold Stock Pill */}
                   <div className="text-end shrink-0 ps-1 sm:ps-2">
                     <div
-                      className={`text-2xl sm:text-3xl font-black font-mono leading-none ${isOutOfStock
+                      className={`text-2xl sm:text-3xl font-black font-mono leading-none ${
+                        isOutOfStock
                           ? 'text-red-600 dark:text-red-400'
                           : isLowStock
-                            ? 'text-amber-600 dark:text-amber-400'
-                            : 'text-slate-900 dark:text-white'
-                        }`}
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-slate-900 dark:text-white'
+                      }`}
                     >
                       {stock}
                     </div>

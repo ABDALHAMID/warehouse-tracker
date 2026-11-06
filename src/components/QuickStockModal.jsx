@@ -169,10 +169,11 @@ export default function QuickStockModal({ item, onClose, onSuccess }) {
             <button
               type="button"
               onClick={() => setChangeType('IN')}
-              className={`py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 ${changeType === 'IN'
+              className={`py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 ${
+                changeType === 'IN'
                   ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+              }`}
             >
               <TrendingUp className="w-4 h-4" />
               <span>+ IN ({t('quick_update.in_label', 'Entrée')})</span>
@@ -181,10 +182,11 @@ export default function QuickStockModal({ item, onClose, onSuccess }) {
             <button
               type="button"
               onClick={() => setChangeType('OUT')}
-              className={`py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 ${changeType === 'OUT'
+              className={`py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 ${
+                changeType === 'OUT'
                   ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+              }`}
             >
               <TrendingDown className="w-4 h-4" />
               <span>- OUT ({t('quick_update.out_label', 'Sortie')})</span>
@@ -258,10 +260,11 @@ export default function QuickStockModal({ item, onClose, onSuccess }) {
 
           {/* Live Preview Box with Pop Animation on Change */}
           <div
-            className={`p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 ${changeType === 'IN'
+            className={`p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 ${
+              changeType === 'IN'
                 ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60'
                 : 'bg-red-50/70 dark:bg-red-950/30 border-red-200 dark:border-red-800/60'
-              }`}
+            }`}
           >
             <div>
               <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
@@ -274,10 +277,11 @@ export default function QuickStockModal({ item, onClose, onSuccess }) {
                 <ArrowRight className="w-4 h-4 text-slate-400 rtl:rotate-180" />
                 <span
                   key={`${changeType}-${newStock}`}
-                  className={`text-2xl font-black number-pop ${changeType === 'IN'
+                  className={`text-2xl font-black number-pop ${
+                    changeType === 'IN'
                       ? 'text-emerald-600 dark:text-emerald-400'
                       : 'text-red-600 dark:text-red-400'
-                    }`}
+                  }`}
                 >
                   {newStock}
                 </span>
@@ -287,10 +291,11 @@ export default function QuickStockModal({ item, onClose, onSuccess }) {
             <div className="text-end">
               <span
                 key={`${changeType}-${parsedQty}`}
-                className={`text-xs font-black uppercase px-2 py-1 rounded-lg number-pop inline-block ${changeType === 'IN'
+                className={`text-xs font-black uppercase px-2 py-1 rounded-lg number-pop inline-block ${
+                  changeType === 'IN'
                     ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300'
                     : 'bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-300'
-                  }`}
+                }`}
               >
                 {changeType === 'IN' ? `+${parsedQty}` : `-${parsedQty}`}
               </span>
@@ -333,10 +338,11 @@ export default function QuickStockModal({ item, onClose, onSuccess }) {
             <button
               type="submit"
               disabled={submitting || !canModifyStock || parsedQty <= 0}
-              className={`flex-2 py-3.5 px-5 rounded-xl text-white font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${changeType === 'IN'
+              className={`flex-2 py-3.5 px-5 rounded-xl text-white font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                changeType === 'IN'
                   ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25'
                   : 'bg-red-600 hover:bg-red-700 shadow-red-600/25'
-                }`}
+              }`}
             >
               {submitting ? (
                 <>

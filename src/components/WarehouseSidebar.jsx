@@ -170,13 +170,13 @@ export default function WarehouseSidebar({ isOpen, onClose }) {
             <p className="text-xs text-slate-600 dark:text-slate-400">
               {uiMode === 'simple'
                 ? t(
-                  'simple_mode.simple_desc',
-                  'Single-screen view focused exclusively on Poutrelle stock updates.'
-                )
+                    'simple_mode.simple_desc',
+                    'Single-screen view focused exclusively on Poutrelle stock updates.'
+                  )
                 : t(
-                  'simple_mode.classic_desc',
-                  'Full multi-tab warehouse management with dashboard, logs, and scanner.'
-                )}
+                    'simple_mode.classic_desc',
+                    'Full multi-tab warehouse management with dashboard, logs, and scanner.'
+                  )}
             </p>
 
             <button
@@ -217,10 +217,11 @@ export default function WarehouseSidebar({ isOpen, onClose }) {
                     key={lang.code}
                     type="button"
                     onClick={() => handleSelectLanguage(lang.code)}
-                    className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${isSelected
+                    className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${
+                      isSelected
                         ? 'bg-blue-50 dark:bg-blue-950/70 border-blue-500 text-blue-700 dark:text-blue-300 shadow-xs'
                         : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
+                    }`}
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-base">{lang.flag}</span>
@@ -244,10 +245,11 @@ export default function WarehouseSidebar({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={() => isDark && toggleTheme()}
-                className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${!isDark
+                className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${
+                  !isDark
                     ? 'bg-amber-50 dark:bg-amber-950/60 border-amber-500 text-amber-800 dark:text-amber-300 shadow-xs'
                     : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300'
-                  }`}
+                }`}
               >
                 <Sun className="w-4 h-4 text-amber-500" />
                 <span>Light</span>
@@ -255,10 +257,11 @@ export default function WarehouseSidebar({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={() => !isDark && toggleTheme()}
-                className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${isDark
+                className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all duration-150 active:scale-95 cursor-pointer ${
+                  isDark
                     ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-500 text-blue-700 dark:text-blue-300 shadow-xs'
                     : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300'
-                  }`}
+                }`}
               >
                 <Moon className="w-4 h-4 text-blue-400" />
                 <span>Dark</span>
