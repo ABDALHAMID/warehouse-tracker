@@ -269,5 +269,11 @@
     "active_pill": "🏛️ المود الكلاسيكي",
     "switch_to_simple": "بدل للمود الخفيف",
     "switch_btn": "⚡ المود الخفيف"
+  },
+  "pwa": {
+    "install_app": "إنستالي التطبيق",
+    "ios_install_title": "إنستالي ف iPhone / iPad",
+    "ios_install_step1": "ورك على زر البارطاج (Share) لتحت ف سفاري",
+    "ios_install_step2": "هبط لتحت وعزل \"زيد ل الشاشة الرئيسية\""
   }
 }

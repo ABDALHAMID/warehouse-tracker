@@ -269,5 +269,11 @@
     "active_pill": "🏛️ Classic Mode",
     "switch_to_simple": "Switch to Simple Mode",
     "switch_btn": "⚡ Simple Mode"
+  },
+  "pwa": {
+    "install_app": "Install App",
+    "ios_install_title": "Install on iPhone / iPad",
+    "ios_install_step1": "Tap the Share button at the bottom of Safari",
+    "ios_install_step2": "Scroll down and select \"Add to Home Screen\""
   }
 }

@@ -269,5 +269,11 @@
     "active_pill": "🏛️ الوضع الكامل",
     "switch_to_simple": "التبديل إلى الوضع البسيط",
     "switch_btn": "⚡ الوضع البسيط"
+  },
+  "pwa": {
+    "install_app": "تثبيت التطبيق",
+    "ios_install_title": "التثبيت على أجهزة iPhone / iPad",
+    "ios_install_step1": "اضغط على زر المشاركة (Share) أسفل متصفح Safari",
+    "ios_install_step2": "مرر لأسفل واختر \"إضافة إلى الصفحة الرئيسية\""
   }
 }

@@ -269,5 +269,11 @@
     "active_pill": "🏛️ Mode Classique",
     "switch_to_simple": "Basculer vers le Mode Simple",
     "switch_btn": "⚡ Mode Simple"
+  },
+  "pwa": {
+    "install_app": "Installer l'App",
+    "ios_install_title": "Installer sur iPhone / iPad",
+    "ios_install_step1": "Appuyez sur le bouton Partager en bas de Safari",
+    "ios_install_step2": "Faites défiler vers le bas et sélectionnez \"Sur l'écran d'accueil\""
   }
 }

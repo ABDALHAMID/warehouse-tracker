@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
 import LangSwitcher from '../components/LangSwitcher'
+import InstallPWAButton from '../components/InstallPWAButton'
 import { Boxes, Lock, User, ArrowRight, HardHat, AlertCircle } from 'lucide-react'
 
 export default function Login() {
@@ -174,6 +175,11 @@ export default function Login() {
                 <HardHat className="w-4 h-4 text-emerald-500 shrink-0" />
                 <span>Said (Operator)</span>
               </button>
+            </div>
+
+            {/* In-App PWA Install Prompt */}
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+              <InstallPWAButton variant="pill" className="w-full justify-center py-2.5" />
             </div>
           </div>
         </div>

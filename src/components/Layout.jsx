@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useUIMode } from '../context/UIModeContext'
 import ThemeToggle from './ThemeToggle'
 import LangSwitcher from './LangSwitcher'
+import InstallPWAButton from './InstallPWAButton'
 import {
   LayoutDashboard,
   Boxes,
@@ -116,6 +117,9 @@ export default function Layout() {
 
           {/* Controls: Mode Switch + Lang + Theme + Worker & Logout */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Install PWA Button */}
+            <InstallPWAButton />
+
             {/* UI Mode Toggle Button */}
             <button
               type="button"

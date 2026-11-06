@@ -17,6 +17,7 @@ import LangSwitcher from '../components/LangSwitcher'
 import ThemeToggle from '../components/ThemeToggle'
 import QuickStockModal from '../components/QuickStockModal'
 import ItemSymbol from '../components/ItemSymbol'
+import InstallPWAButton from '../components/InstallPWAButton'
 import {
   Boxes,
   Search,
@@ -275,6 +276,9 @@ export default function SimpleWarehouseView() {
 
           {/* Right Controls: Mode Toggle, Lang, Theme */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Install PWA Button */}
+            <InstallPWAButton />
+
             {/* UI Mode Switch Pill */}
             <button
               type="button"
