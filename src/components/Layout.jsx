@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
@@ -5,6 +6,7 @@ import { useUIMode } from '../context/UIModeContext'
 import ThemeToggle from './ThemeToggle'
 import LangSwitcher from './LangSwitcher'
 import InstallPWAButton from './InstallPWAButton'
+import WarehouseSidebar from './WarehouseSidebar'
 import {
   LayoutDashboard,
   Boxes,
@@ -13,6 +15,7 @@ import {
   UserCircle,
   MapPin,
   Sliders,
+  Menu,
 } from 'lucide-react'
 import { isSupabaseConfigured } from '../lib/supabaseClient'
 import { getRoleBadgeClasses } from '../lib/workerProfiles'
@@ -21,6 +24,7 @@ export default function Layout() {
   const { t } = useTranslation()
   const { user, profile, signOut, isDemoUser } = useAuth()
   const { uiMode, toggleUIMode } = useUIMode()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -52,11 +56,10 @@ export default function Layout() {
               {/* Ultra-small status dot - zero horizontal space, out of the way */}
               <span
                 title={isSupabaseConfigured && !isDemoUser ? 'Supabase Live' : 'Demo Mode'}
-                className={`absolute -top-0.5 -end-0.5 w-2 h-2 rounded-full ring-2 ring-white dark:ring-slate-900 ${
-                  isSupabaseConfigured && !isDemoUser
+                className={`absolute -top-0.5 -end-0.5 w-2 h-2 rounded-full ring-2 ring-white dark:ring-slate-900 ${isSupabaseConfigured && !isDemoUser
                     ? 'bg-emerald-500 animate-pulse'
                     : 'bg-amber-500'
-                }`}
+                  }`}
               />
             </div>
             <div className="min-w-0">
@@ -74,10 +77,9 @@ export default function Layout() {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${isActive
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`
               }
             >
@@ -88,10 +90,9 @@ export default function Layout() {
             <NavLink
               to="/inventory"
               className={({ isActive }) =>
-                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${isActive
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`
               }
             >
@@ -103,10 +104,9 @@ export default function Layout() {
             <NavLink
               to="/profile"
               className={({ isActive }) =>
-                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                `px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${isActive
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`
               }
             >
@@ -115,90 +115,106 @@ export default function Layout() {
             </NavLink>
           </nav>
 
-          {/* Controls: Mode Switch + Lang + Theme + Worker & Logout */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            {/* Install PWA Button */}
-            <InstallPWAButton />
-
-            {/* UI Mode Toggle Button */}
+          {/* Controls: Desktop Full Controls / Mobile Options Button */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Mobile Options Menu Button */}
             <button
               type="button"
-              onClick={toggleUIMode}
-              title={
-                uiMode === 'simple'
-                  ? `${t('simple_mode.switch_to_classic', 'Switch to Classic Mode')} (Ctrl+Shift+M)`
-                  : `${t('classic_mode.switch_to_simple', 'Switch to Simple Mode')} (Ctrl+Shift+M)`
-              }
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs hover:bg-blue-100 dark:hover:bg-blue-900/50"
+              onClick={() => setSidebarOpen(true)}
+              aria-label={t('nav.options', 'Options')}
+              title={t('nav.options', 'Options')}
+              className="sm:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
             >
-              <Sliders className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-              <span className="hidden sm:inline">
-                {uiMode === 'simple'
-                  ? t('simple_mode.switch_to_classic', '🏛️ Switch to Classic')
-                  : t('classic_mode.switch_to_simple', '⚡ Switch to Simple')}
-              </span>
-              <span className="sm:hidden text-[10px] font-black">
-                {uiMode === 'simple' ? '🏛️ Classic' : '⚡ Simple'}
-              </span>
+              <Menu className="w-4 h-4" />
+              <span>{t('nav.options', 'Options')}</span>
             </button>
 
-            <LangSwitcher />
-            <ThemeToggle />
-
-            {/* Worker Badge & Logout Button */}
-            <div className="flex items-center ps-1 sm:ps-2 border-s border-slate-200 dark:border-slate-800 gap-1 sm:gap-1.5">
-              <NavLink
-                to="/profile"
-                title={workerCode ? `${workerName} (${workerCode})` : workerName}
-                aria-label={t('nav.profile')}
-                className="hidden sm:flex items-center gap-2 min-h-11 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer active:scale-95 touch-manipulation"
-              >
-                <HardHat className="w-4 h-4 text-amber-500 shrink-0" />
-                <div className="flex flex-col leading-tight min-w-0">
-                  <span className="max-w-[130px] truncate font-bold">
-                    {workerName}
-                    {workerCode && (
-                      <span className="ms-1 font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                        {workerCode}
-                      </span>
-                    )}
-                  </span>
-                  <span className="flex items-center gap-1.5 mt-0.5">
-                    {workerRole && (
-                      <span
-                        className={`px-1.5 py-px rounded border text-[9px] font-black uppercase tracking-wider ${getRoleBadgeClasses(workerRole)}`}
-                      >
-                        {t(`roles.${workerRole}`, workerRole)}
-                      </span>
-                    )}
-                    {workerZone && (
-                      <span className="flex items-center gap-0.5 text-[10px] text-slate-500 dark:text-slate-400 max-w-[90px] truncate">
-                        <MapPin className="w-2.5 h-2.5 shrink-0" />
-                        {workerZone}
-                      </span>
-                    )}
-                  </span>
-                </div>
-              </NavLink>
+            {/* Desktop-only Controls */}
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
+              <InstallPWAButton />
 
               <button
                 type="button"
-                onClick={handleLogout}
-                aria-label={t('nav.logout')}
-                title={t('nav.logout')}
-                className="min-w-9 min-h-9 sm:min-w-11 sm:min-h-11 rounded-xl p-2 sm:p-2.5 flex items-center justify-center text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer active:scale-95 touch-manipulation"
+                onClick={toggleUIMode}
+                title={
+                  uiMode === 'simple'
+                    ? `${t('simple_mode.switch_to_classic', 'Switch to Classic Mode')} (Ctrl+Shift+M)`
+                    : `${t('classic_mode.switch_to_simple', 'Switch to Simple Mode')} (Ctrl+Shift+M)`
+                }
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs hover:bg-blue-100 dark:hover:bg-blue-900/50"
               >
-                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Sliders className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                <span>
+                  {uiMode === 'simple'
+                    ? t('simple_mode.switch_to_classic', '🏛️ Switch to Classic')
+                    : t('classic_mode.switch_to_simple', '⚡ Switch to Simple')}
+                </span>
               </button>
+
+              <LangSwitcher />
+              <ThemeToggle />
+
+              {/* Worker Badge & Logout Button */}
+              <div className="flex items-center ps-1 sm:ps-2 border-s border-slate-200 dark:border-slate-800 gap-1 sm:gap-1.5">
+                <NavLink
+                  to="/profile"
+                  title={workerCode ? `${workerName} (${workerCode})` : workerName}
+                  aria-label={t('nav.profile')}
+                  className="flex items-center gap-2 min-h-11 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer active:scale-95 touch-manipulation"
+                >
+                  <HardHat className="w-4 h-4 text-amber-500 shrink-0" />
+                  <div className="flex flex-col leading-tight min-w-0">
+                    <span className="max-w-[130px] truncate font-bold">
+                      {workerName}
+                      {workerCode && (
+                        <span className="ms-1 font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                          {workerCode}
+                        </span>
+                      )}
+                    </span>
+                    <span className="flex items-center gap-1.5 mt-0.5">
+                      {workerRole && (
+                        <span
+                          className={`px-1.5 py-px rounded border text-[9px] font-black uppercase tracking-wider ${getRoleBadgeClasses(workerRole)}`}
+                        >
+                          {t(`roles.${workerRole}`, workerRole)}
+                        </span>
+                      )}
+                      {workerZone && (
+                        <span className="flex items-center gap-0.5 text-[10px] text-slate-500 dark:text-slate-400 max-w-[90px] truncate">
+                          <MapPin className="w-2.5 h-2.5 shrink-0" />
+                          {workerZone}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                </NavLink>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  aria-label={t('nav.logout')}
+                  title={t('nav.logout')}
+                  className="min-w-9 min-h-9 sm:min-w-11 sm:min-h-11 rounded-xl p-2 sm:p-2.5 flex items-center justify-center text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer active:scale-95 touch-manipulation"
+                >
+                  <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Page Content Body */}
-      <main className="flex-1 max-w-5xl w-full mx-auto p-4 pb-28 md:pb-12">
+      <main className="flex-1 max-w-5xl w-full mx-auto p-4 pb-28 md:pb-12 animate-in fade-in duration-200">
         <Outlet />
       </main>
+
+      {/* Sidebar Drawer */}
+      <WarehouseSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       {/* Mobile Bottom Navigation Bar (Optimized for one-handed warehouse operation) */}
       <nav className="md:hidden fixed bottom-0 start-0 end-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 px-3 py-2 shadow-lg">
@@ -208,10 +224,9 @@ export default function Layout() {
             to="/"
             end
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${
-                isActive
-                  ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
-                  : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
+              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${isActive
+                ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
+                : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
               }`
             }
           >
@@ -223,10 +238,9 @@ export default function Layout() {
           <NavLink
             to="/inventory"
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${
-                isActive
-                  ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
-                  : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
+              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${isActive
+                ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
+                : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
               }`
             }
           >
@@ -238,10 +252,9 @@ export default function Layout() {
           <NavLink
             to="/profile"
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${
-                isActive
-                  ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
-                  : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
+              `flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all cursor-pointer active:scale-95 ${isActive
+                ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50 dark:bg-blue-950/50'
+                : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-800 dark:hover:text-slate-200'
               }`
             }
           >

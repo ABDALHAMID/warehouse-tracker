@@ -13,7 +13,8 @@
     "worker": "العامل",
     "offlineNotice": "الوضع التجريبي / بدون إنترنت",
     "liveConnected": "متصل مباشرة بسوبابيز",
-    "profile": "الملف الشخصي"
+    "profile": "الملف الشخصي",
+    "options": "خيارات"
   },
   "theme": {
     "switchToDark": "التبديل إلى الوضع الداكن",
@@ -29,8 +30,10 @@
   "login": {
     "title": "دخول عمال المستودع",
     "subtitle": "قم بتسجيل الدخول للوصول إلى إدارة مواد البناء ومسح الباركود",
-    "workerCodeLabel": "اسم العامل أو الرمز",
-    "workerCodePlaceholder": "مثال: karim أو W-102",
+    "usernameLabel": "اسم العامل",
+    "workerNamePlaceholder": "مثال: chofi",
+    "workerCodeLabel": "اسم العامل",
+    "workerCodePlaceholder": "مثال: chofi",
     "emailLabel": "اسم العامل أو الرمز",
     "emailPlaceholder": "مثال: karim أو W-102",
     "passwordLabel": "كلمة المرور",
@@ -258,6 +261,10 @@
   "simple_mode": {
     "active_pill": "⚡ الوضع البسيط",
     "switch_to_classic": "التبديل إلى الوضع الكامل",
+    "interface_mode": "نمط الواجهة",
+    "simple_desc": "شاشة موحدة وسريعة مخصصة لإدارة مخزون البوتريل.",
+    "classic_desc": "إدارة شاملة لجميع أقسام المستودع مع لوحة التحكم والسجلات والماسح.",
+    "shortcut_hint": "اختصار: Ctrl + Shift + M",
     "search_placeholder": "ابحث عن طول البوتريل، الاسم أو الرمز...",
     "sorted_by_last_managed": "آخر العمليات",
     "length": "الطول",
@@ -270,8 +277,16 @@
     "switch_to_simple": "التبديل إلى الوضع البسيط",
     "switch_btn": "⚡ الوضع البسيط"
   },
+  "sidebar": {
+    "options_title": "خيارات المستودع",
+    "options_subtitle": "الإعدادات، الحساب والاختصارات"
+  },
   "pwa": {
     "install_app": "تثبيت التطبيق",
+    "installed_title": "التطبيق مثبت",
+    "running_standalone": "يعمل حالياً في الوضع المستقل PWA",
+    "install_card_title": "تثبيت تطبيق المستودع",
+    "install_card_desc": "أضف للشاشة الرئيسية للوصول السريع بدون إنترنت وبشاشة كاملة",
     "ios_install_title": "التثبيت على أجهزة iPhone / iPad",
     "ios_install_step1": "اضغط على زر المشاركة (Share) أسفل متصفح Safari",
     "ios_install_step2": "مرر لأسفل واختر \"إضافة إلى الصفحة الرئيسية\""

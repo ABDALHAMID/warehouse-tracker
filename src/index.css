@@ -51,3 +51,254 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ------------------------------------------------------------- */
+/* ULTRA-SMOOTH HARDWARE-ACCELERATED ANIMATION SYSTEM            */
+/* ------------------------------------------------------------- */
+
+:root {
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomIn95 {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom4 {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom6 {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes numberPop {
+  0% {
+    transform: scale(0.92);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGentle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes highlightFlash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    background-color: rgba(16, 185, 129, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    background-color: rgba(16, 185, 129, 0.08);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Base animate-in engine */
+.animate-in {
+  animation-duration: var(--anim-duration, 240ms);
+  animation-timing-function: var(--ease-spring);
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.fade-out {
+  animation-name: fadeOut;
+}
+
+.zoom-in-95 {
+  animation-name: zoomIn95;
+}
+
+.slide-in-from-bottom {
+  animation-name: slideInFromBottom;
+}
+
+.slide-in-from-bottom-4 {
+  animation-name: slideInFromBottom4;
+}
+
+.slide-in-from-bottom-6 {
+  animation-name: slideInFromBottom6;
+}
+
+.slide-in-from-right {
+  animation-name: slideInFromRight;
+}
+
+[dir="rtl"] .rtl\:slide-in-from-left {
+  animation-name: slideInFromLeft;
+}
+
+.duration-150 {
+  --anim-duration: 150ms;
+  animation-duration: 150ms;
+}
+
+.duration-200 {
+  --anim-duration: 200ms;
+  animation-duration: 200ms;
+}
+
+.duration-250 {
+  --anim-duration: 250ms;
+  animation-duration: 250ms;
+}
+
+.duration-300 {
+  --anim-duration: 300ms;
+  animation-duration: 300ms;
+}
+
+/* Tactile micro-interaction classes */
+.tap-feedback {
+  transition: transform 0.15s var(--ease-spring), opacity 0.15s ease;
+}
+.tap-feedback:active {
+  transform: scale(0.96);
+}
+
+.card-hover-smooth {
+  transition: transform 0.22s var(--ease-spring), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.card-hover-smooth:hover {
+  transform: translateY(-2px);
+}
+.card-hover-smooth:active {
+  transform: scale(0.985);
+}
+
+.number-pop {
+  animation: numberPop 0.28s var(--ease-bounce) both;
+}
+
+.highlight-flash {
+  animation: highlightFlash 1.6s var(--ease-spring) both;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+

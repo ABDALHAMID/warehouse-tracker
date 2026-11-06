@@ -13,7 +13,8 @@
     "worker": "الخدام / المعلم",
     "offlineNotice": "مود تجريبي بلا ويفي",
     "liveConnected": "كونيكطي مباشر مع سوبابيز",
-    "profile": "البروفايل"
+    "profile": "البروفايل",
+    "options": "خيارات"
   },
   "theme": {
     "switchToDark": "دير المود المظلم",
@@ -29,8 +30,10 @@
   "login": {
     "title": "دخول الخدامة للديبو",
     "subtitle": "دخل لحسابك باش تفيريفي السلعة وتسكاني الكودبار",
-    "workerCodeLabel": "سمية الخدام ولا الكود",
-    "workerCodePlaceholder": "مثال: karim ولا W-102",
+    "usernameLabel": "سمية الخدام",
+    "workerNamePlaceholder": "مثال: chofi",
+    "workerCodeLabel": "سمية الخدام",
+    "workerCodePlaceholder": "مثال: chofi",
     "emailLabel": "سمية الخدام ولا الكود",
     "emailPlaceholder": "مثال: karim ولا W-102",
     "passwordLabel": "المودباس",
@@ -258,6 +261,10 @@
   "simple_mode": {
     "active_pill": "⚡ المود الخفيف",
     "switch_to_classic": "بدل للمود الكلاسيكي",
+    "interface_mode": "نمط الواجهة",
+    "simple_desc": "شاشة وحدة وخفيفة مخصصة لتحديث مخزون البوتريل بالزربة.",
+    "classic_desc": "جيستيون كاملة بكلشي، طابلو دو بور، الهيستوريك والسكانير.",
+    "shortcut_hint": "الراسورسي: Ctrl + Shift + M",
     "search_placeholder": "قلب على طول البوتريل ولا السمية...",
     "sorted_by_last_managed": "آخر ما تخدم",
     "length": "الطول",
@@ -270,8 +277,16 @@
     "switch_to_simple": "بدل للمود الخفيف",
     "switch_btn": "⚡ المود الخفيف"
   },
+  "sidebar": {
+    "options_title": "خيارات الديبو",
+    "options_subtitle": "الإعدادات، الحساب ولي راكورسي"
+  },
   "pwa": {
     "install_app": "إنستالي التطبيق",
+    "installed_title": "التطبيق راه مانستالي",
+    "running_standalone": "خدام دابا فالمود المستقل PWA",
+    "install_card_title": "إنستالي تطبيق الديبو",
+    "install_card_desc": "زيدو للشاشة الرئيسية باش تخدم بيه بالزربة وبلا كونيكسيون",
     "ios_install_title": "إنستالي ف iPhone / iPad",
     "ios_install_step1": "ورك على زر البارطاج (Share) لتحت ف سفاري",
     "ios_install_step2": "هبط لتحت وعزل \"زيد ل الشاشة الرئيسية\""

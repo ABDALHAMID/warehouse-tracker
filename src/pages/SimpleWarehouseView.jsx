@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
-import { useUIMode } from '../context/UIModeContext'
 import { warehouseDb } from '../lib/warehouseDb'
 import {
   CATEGORIES_TYPES,
@@ -12,12 +11,9 @@ import {
   sortItemsByLength,
   parseLength,
 } from '../data'
-import { getRoleBadgeClasses } from '../lib/workerProfiles'
-import LangSwitcher from '../components/LangSwitcher'
-import ThemeToggle from '../components/ThemeToggle'
 import QuickStockModal from '../components/QuickStockModal'
 import ItemSymbol from '../components/ItemSymbol'
-import InstallPWAButton from '../components/InstallPWAButton'
+import WarehouseSidebar from '../components/WarehouseSidebar'
 import {
   Boxes,
   Search,
@@ -26,7 +22,7 @@ import {
   Clock,
   Sparkles,
   RefreshCw,
-  Sliders,
+  Menu,
   CheckCircle2,
 } from 'lucide-react'
 
@@ -63,7 +59,6 @@ function formatRelativeTime(dateString, t) {
 export default function SimpleWarehouseView() {
   const { t, i18n } = useTranslation()
   const { user, profile } = useAuth()
-  const { uiMode, toggleUIMode } = useUIMode()
   const currentLang = i18n.language || 'en'
 
   const [items, setItems] = useState([])
@@ -80,12 +75,17 @@ export default function SimpleWarehouseView() {
   // Floating Toast
   const [toast, setToast] = useState(null)
 
+  // Sidebar Drawer state
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Highlighted item ID for smooth update animation
+  const [highlightedItemId, setHighlightedItemId] = useState(null)
+
   const workerName =
     profile?.full_name ||
     user?.user_metadata?.full_name ||
     user?.email?.split('@')[0] ||
     t('nav.worker', 'Worker')
-  const userRole = profile?.role || 'worker'
 
   // Load items ordered by updated_at DESC (Last Managed first)
   const loadItems = useCallback(async (isSilent = false) => {
@@ -118,6 +118,9 @@ export default function SimpleWarehouseView() {
     const unsubscribe = warehouseDb.subscribeToAllItems((updatedItem) => {
       if (!updatedItem?.id) return
 
+      setHighlightedItemId(updatedItem.id)
+      setTimeout(() => setHighlightedItemId(null), 2200)
+
       setItems((prevItems) => {
         const filtered = prevItems.filter((i) => i.id !== updatedItem.id)
         // Insert at the very top (Last Managed)
@@ -128,6 +131,8 @@ export default function SimpleWarehouseView() {
     const handleWindowUpdate = (e) => {
       const updated = e.detail?.item
       if (updated?.id) {
+        setHighlightedItemId(updated.id)
+        setTimeout(() => setHighlightedItemId(null), 2200)
         setItems((prevItems) => {
           const filtered = prevItems.filter((i) => i.id !== updated.id)
           return [updated, ...filtered]
@@ -214,6 +219,12 @@ export default function SimpleWarehouseView() {
   }, [items, searchTerm, selectedCategory, selectedLength, sortBy, currentLang])
 
   const handleStockSuccess = (updatedItem, changeType, quantity) => {
+    // Highlight the updated item with pulse glow
+    setHighlightedItemId(updatedItem.id)
+    setTimeout(() => {
+      setHighlightedItemId(null)
+    }, 2200)
+
     // Show toast
     const symbol = changeType === 'IN' ? '+' : '-'
     const actionLabel =
@@ -260,43 +271,43 @@ export default function SimpleWarehouseView() {
               </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                 <HardHat className="w-3 h-3 text-amber-500 shrink-0" />
-                <span className="font-bold truncate max-w-[100px] sm:max-w-[140px]">
+                <span className="font-bold truncate max-w-[110px] sm:max-w-[160px]">
                   {workerName}
                 </span>
-                <span
-                  className={`hidden sm:inline-block text-[10px] uppercase font-black px-1 rounded ${getRoleBadgeClasses(
-                    userRole
-                  )}`}
-                >
-                  {t(`profile.roles.${userRole}`, userRole)}
+                <span className="text-[10px] text-slate-400 dark:text-slate-500">•</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  {profile?.assigned_zone || 'el hommer 2'}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Right Controls: Mode Toggle, Lang, Theme */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            {/* Install PWA Button */}
-            <InstallPWAButton />
-
-            {/* UI Mode Switch Pill */}
+          {/* Right Controls: Refresh & More Options Button */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Quick Refresh Icon */}
             <button
               type="button"
-              onClick={toggleUIMode}
-              title={`${t('simple_mode.switch_to_classic', 'Switch to Classic Mode')} (Ctrl+Shift+M)`}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all active:scale-95 cursor-pointer border border-slate-200/80 dark:border-slate-700/80 shadow-xs"
+              onClick={() => loadItems(true)}
+              disabled={refreshing}
+              title={t('common.refresh', 'Refresh')}
+              className="p-2 sm:p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all cursor-pointer active:scale-95"
             >
-              <Sliders className="w-3.5 h-3.5 text-blue-500" />
-              <span className="hidden sm:inline">
-                {uiMode === 'simple'
-                  ? t('simple_mode.active_pill', '⚡ Simple Mode')
-                  : t('classic_mode.active_pill', 'Classic')}
-              </span>
-              <span className="sm:hidden text-[11px] font-black">⚡ Simple</span>
+              <RefreshCw
+                className={`w-4 h-4 ${refreshing ? 'animate-spin text-blue-500' : ''}`}
+              />
             </button>
 
-            <LangSwitcher />
-            <ThemeToggle />
+            {/* More Options Button (Opens Sidebar Drawer) */}
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label={t('sidebar.options_title', 'Warehouse Options')}
+              title={t('sidebar.options_title', 'Warehouse Options')}
+              className="flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
+            >
+              <Menu className="w-4 h-4" />
+              <span className="font-extrabold">{t('nav.options', 'Options')}</span>
+            </button>
           </div>
         </div>
 
@@ -342,11 +353,10 @@ export default function SimpleWarehouseView() {
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.slug)}
-                  className={`min-h-8 px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
-                    active
+                  className={`min-h-8 px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${active
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
+                    }`}
                 >
                   {cat.name}
                 </button>
@@ -389,11 +399,10 @@ export default function SimpleWarehouseView() {
             <button
               type="button"
               onClick={() => setSelectedLength('all')}
-              className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
-                selectedLength === 'all'
+              className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${selectedLength === 'all'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
-              }`}
+                }`}
             >
               {t('categories.all', 'All')}
             </button>
@@ -404,11 +413,10 @@ export default function SimpleWarehouseView() {
                   key={len}
                   type="button"
                   onClick={() => setSelectedLength(len)}
-                  className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-mono font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
-                    active
+                  className={`min-h-7 px-2.5 py-1 rounded-lg text-xs font-mono font-black whitespace-nowrap transition-all cursor-pointer active:scale-95 ${active
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
+                    }`}
                 >
                   {len.toFixed(2)}m
                 </button>
@@ -419,11 +427,22 @@ export default function SimpleWarehouseView() {
 
         {/* Items List */}
         {loading ? (
-          <div className="min-h-[50vh] flex flex-col items-center justify-center text-slate-400 gap-3">
-            <RefreshCw className="w-8 h-8 animate-spin text-blue-500" />
-            <p className="text-xs font-bold uppercase tracking-wider">
-              {t('common.loading', 'Loading stock items...')}
-            </p>
+          <div className="space-y-2.5">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <div
+                key={n}
+                className="p-4 rounded-2xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-4 animate-pulse"
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-800 shrink-0" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-3/5" />
+                    <div className="h-3 bg-slate-100 dark:bg-slate-800/60 rounded-md w-2/5" />
+                  </div>
+                </div>
+                <div className="w-14 h-9 bg-slate-200 dark:bg-slate-800 rounded-xl shrink-0" />
+              </div>
+            ))}
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-800 text-center space-y-3">
@@ -462,6 +481,8 @@ export default function SimpleWarehouseView() {
               const localizedName = getItemLabel(item, currentLang)
               const lengthBadge = getItemLength(item)
 
+              const isJustUpdated = highlightedItemId === item.id
+
               return (
                 <div
                   key={item.id}
@@ -474,9 +495,15 @@ export default function SimpleWarehouseView() {
                       setActiveItem(item)
                     }
                   }}
-                  className={`group relative p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 shadow-xs hover:shadow-md transition-all duration-150 cursor-pointer touch-manipulation select-none active:scale-[0.99] flex items-center gap-3 sm:gap-4 ${
-                    index === 0 ? 'ring-2 ring-blue-500/20' : ''
-                  }`}
+                  style={{
+                    animationDelay: `${Math.min(index * 25, 250)}ms`,
+                  }}
+                  className={`group relative p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md cursor-pointer touch-manipulation select-none card-hover-smooth animate-in slide-in-from-bottom-4 duration-300 flex items-center gap-3 sm:gap-4 ${isJustUpdated
+                      ? 'ring-2 ring-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/40 shadow-lg shadow-emerald-500/20 highlight-flash'
+                      : index === 0
+                        ? 'ring-1 ring-blue-500/30'
+                        : ''
+                    }`}
                 >
                   {/* Symbolic SVG Icon */}
                   <ItemSymbol
@@ -526,13 +553,12 @@ export default function SimpleWarehouseView() {
                   {/* Right: Large Bold Stock Pill */}
                   <div className="text-end shrink-0 ps-1 sm:ps-2">
                     <div
-                      className={`text-2xl sm:text-3xl font-black font-mono leading-none ${
-                        isOutOfStock
+                      className={`text-2xl sm:text-3xl font-black font-mono leading-none ${isOutOfStock
                           ? 'text-red-600 dark:text-red-400'
                           : isLowStock
-                          ? 'text-amber-600 dark:text-amber-400'
-                          : 'text-slate-900 dark:text-white'
-                      }`}
+                            ? 'text-amber-600 dark:text-amber-400'
+                            : 'text-slate-900 dark:text-white'
+                        }`}
                     >
                       {stock}
                     </div>
@@ -570,6 +596,12 @@ export default function SimpleWarehouseView() {
           onSuccess={handleStockSuccess}
         />
       )}
+
+      {/* Warehouse Options Sidebar Drawer */}
+      <WarehouseSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
     </div>
   )
 }

@@ -13,7 +13,8 @@
     "worker": "Worker",
     "offlineNotice": "Demo / Offline Mode",
     "liveConnected": "Supabase Live",
-    "profile": "Profile"
+    "profile": "Profile",
+    "options": "Options"
   },
   "theme": {
     "switchToDark": "Switch to Dark Mode",
@@ -29,8 +30,10 @@
   "login": {
     "title": "Worker Sign In",
     "subtitle": "Log in to access warehouse inventory & scan materials",
-    "workerCodeLabel": "Worker Name or Code",
-    "workerCodePlaceholder": "e.g. karim or W-102",
+    "usernameLabel": "Name",
+    "workerNamePlaceholder": "e.g. chofi",
+    "workerCodeLabel": "Worker Name",
+    "workerCodePlaceholder": "e.g. chofi",
     "emailLabel": "Worker Name or Code",
     "emailPlaceholder": "e.g. karim or W-102",
     "passwordLabel": "Password",
@@ -258,6 +261,10 @@
   "simple_mode": {
     "active_pill": "⚡ Simple Mode",
     "switch_to_classic": "Switch to Classic Mode",
+    "interface_mode": "Interface Mode",
+    "simple_desc": "Fast single-screen view focused on Poutrelle stock updates.",
+    "classic_desc": "Full multi-tab warehouse management with dashboard, logs, and scanner.",
+    "shortcut_hint": "Shortcut: Ctrl + Shift + M",
     "search_placeholder": "Search Poutrelle length, name, or SKU...",
     "sorted_by_last_managed": "Last Managed",
     "length": "Length",
@@ -270,8 +277,16 @@
     "switch_to_simple": "Switch to Simple Mode",
     "switch_btn": "⚡ Simple Mode"
   },
+  "sidebar": {
+    "options_title": "Warehouse Options",
+    "options_subtitle": "Settings, profile & shortcuts"
+  },
   "pwa": {
     "install_app": "Install App",
+    "installed_title": "App is Installed",
+    "running_standalone": "Running in standalone PWA mode",
+    "install_card_title": "Install Warehouse App",
+    "install_card_desc": "Add to your home screen for quick offline access & full-screen view",
     "ios_install_title": "Install on iPhone / iPad",
     "ios_install_step1": "Tap the Share button at the bottom of Safari",
     "ios_install_step2": "Scroll down and select \"Add to Home Screen\""

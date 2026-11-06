@@ -30,7 +30,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />
   }
 
-  return children
+  return <div className="animate-in fade-in duration-200 min-h-screen">{children}</div>
 }
 
 // Public Route (redirects to dashboard if already logged in)

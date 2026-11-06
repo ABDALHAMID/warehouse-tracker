@@ -9,7 +9,7 @@ import { Boxes, Lock, User, ArrowRight, HardHat, AlertCircle } from 'lucide-reac
 
 export default function Login() {
   const { t } = useTranslation()
-  const { signIn, signInAsDemo, authError, clearAuthError } = useAuth()
+  const { signIn, authError, clearAuthError } = useAuth()
   const navigate = useNavigate()
 
   const [workerCode, setWorkerCode] = useState('')
@@ -23,8 +23,12 @@ export default function Login() {
     clearAuthError()
     setLoading(true)
 
-    // Convert input to lowercase trimmed worker code and append dummy domain
-    const formattedEmail = `${workerCode.trim().toLowerCase()}@warehouse.local`
+    // Convert input to lowercase trimmed name and append domain if needed
+    const cleanInput = workerCode.trim().toLowerCase()
+    const formattedEmail = cleanInput.includes('@')
+      ? cleanInput
+      : `${cleanInput}@warehouse.local`
+
     const { error } = await signIn(formattedEmail, password)
     setLoading(false)
 
@@ -42,11 +46,6 @@ export default function Login() {
   // Shown when an existing session was signed out because the account is inactive
   const displayError =
     errorMsg || (authError === 'account_deactivated' ? t('profile.account_deactivated') : null)
-
-  const handleDemoLogin = (name, role) => {
-    signInAsDemo(name, role)
-    navigate('/')
-  }
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 transition-colors">
@@ -66,7 +65,7 @@ export default function Login() {
 
       {/* Main Login Card */}
       <div className="max-w-md w-full mx-auto my-auto py-6">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 animate-in zoom-in-95 duration-250">
           {/* Header Title */}
           <div className="text-center mb-6">
             <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 mx-auto flex items-center justify-center mb-3 border border-blue-200 dark:border-blue-900 shadow-inner">
@@ -95,7 +94,7 @@ export default function Login() {
                 htmlFor="worker-code"
                 className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
               >
-                {t('login.workerCodeLabel', 'Worker Name or Code')}
+                {t('login.usernameLabel', 'Name')}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none text-slate-400">
@@ -107,7 +106,7 @@ export default function Login() {
                   required
                   value={workerCode}
                   onChange={(e) => setWorkerCode(e.target.value)}
-                  placeholder={t('login.workerCodePlaceholder', 'e.g. karim or W-102')}
+                  placeholder="chofi"
                   className="w-full ps-11 pe-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-base font-medium transition-all"
                 />
               </div>
@@ -152,35 +151,9 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Quick Demo Login Option */}
-          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 text-center">
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-medium">
-              {t('login.demoWorkerHint')}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('Karim Bennani', 'Warehouse Yard Lead')}
-                className="w-full min-h-12 px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all touch-manipulation"
-              >
-                <HardHat className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>Karim (Yard Lead)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('Said Idrissi', 'Materials Operator')}
-                className="w-full min-h-12 px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all touch-manipulation"
-              >
-                <HardHat className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Said (Operator)</span>
-              </button>
-            </div>
-
-            {/* In-App PWA Install Prompt */}
-            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-center">
-              <InstallPWAButton variant="pill" className="w-full justify-center py-2.5" />
-            </div>
+          {/* In-App PWA Install Prompt */}
+          <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+            <InstallPWAButton variant="pill" className="w-full justify-center py-2.5" />
           </div>
         </div>
       </div>
