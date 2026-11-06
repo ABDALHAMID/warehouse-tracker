@@ -166,7 +166,10 @@
     "plumbing_drainage": "Plomberie & Assainissement",
     "paints_waterproofing": "Peinture & Étanchéité",
     "tiles_finishes": "Carrelage & Revêtements",
-    "poutrelles": "Poutrelles Précontraintes"
+    "poutrelles": "Poutrelles Précontraintes",
+    "concrete-beams": "Poutrelles",
+    "concrete_beams": "Poutrelles",
+    "poutrelle": "Poutrelles"
   },
   "common": {
     "units": {
@@ -230,5 +233,41 @@
     "account_deactivated": "Votre compte a été désactivé. Contactez votre responsable de dépôt.",
     "read_only_mode": "Mode lecture seule — modification du stock non autorisée",
     "no_profile": "Aucun profil employé n'est lié à ce compte. Demandez à un responsable d'en créer un."
+  },
+  "last_managed": {
+    "title": "Dernière Gestion",
+    "just_now": "À l'instant",
+    "minutes_ago": "Il y a {{count}}m",
+    "hours_ago": "Il y a {{count}}h",
+    "days_ago": "Il y a {{count}}j"
+  },
+  "quick_update": {
+    "title": "Mise à Jour Rapide",
+    "quantity": "Quantité",
+    "in_label": "Entrée",
+    "out_label": "Sortie",
+    "stock_preview": "Aperçu du Stock",
+    "note_placeholder": "Note optionnelle (ex: bon, client, camion)",
+    "confirm_in": "Confirmer Entrée (+)",
+    "confirm_out": "Confirmer Sortie (-)",
+    "read_only": "Lecture Seule",
+    "invalid_qty": "Veuillez saisir une quantité supérieure à 0",
+    "stock_added": "Stock Ajouté",
+    "stock_deducted": "Stock Déduit"
+  },
+  "simple_mode": {
+    "active_pill": "⚡ Mode Simple",
+    "switch_to_classic": "Basculer vers le Mode Classique",
+    "search_placeholder": "Rechercher une poutrelle, longueur ou SKU...",
+    "sorted_by_last_managed": "Derniers Gérés",
+    "length": "Longueur",
+    "sort_length_asc": "Longueur: Croissant",
+    "sort_length_desc": "Longueur: Décroissant",
+    "sort_stock_low": "Stock Faible d'abord"
+  },
+  "classic_mode": {
+    "active_pill": "🏛️ Mode Classique",
+    "switch_to_simple": "Basculer vers le Mode Simple",
+    "switch_btn": "⚡ Mode Simple"
   }
 }

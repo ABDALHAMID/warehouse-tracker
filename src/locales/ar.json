@@ -166,7 +166,10 @@
     "plumbing_drainage": "الأنابيب والسباكة والصرف الصحي",
     "paints_waterproofing": "الدهانات ومواد العزل المائي",
     "tiles_finishes": "البلاط ومواد اللصق والتشطيب",
-    "poutrelles": "روافد خرسانية مسبقة الإجهاد (بوتريل)"
+    "poutrelles": "روافد خرسانية مسبقة الإجهاد (بوتريل)",
+    "concrete-beams": "الروافد الخرسانية (بوتريل)",
+    "concrete_beams": "الروافد الخرسانية (بوتريل)",
+    "poutrelle": "الروافد الخرسانية (بوتريل)"
   },
   "common": {
     "units": {
@@ -230,5 +233,41 @@
     "account_deactivated": "تم تعطيل حسابك. يرجى التواصل مع مسؤول المستودع.",
     "read_only_mode": "وضع القراءة فقط — لا يمكنك تعديل المخزون",
     "no_profile": "لا يوجد ملف عامل مرتبط بهذا الحساب. اطلب من المسؤول إنشاءه."
+  },
+  "last_managed": {
+    "title": "آخر العمليات",
+    "just_now": "الآن",
+    "minutes_ago": "منذ {{count}} د",
+    "hours_ago": "منذ {{count}} س",
+    "days_ago": "منذ {{count}} يوم"
+  },
+  "quick_update": {
+    "title": "تحديث سريع للمخزون",
+    "quantity": "الكمية المضافة أو المسحوبة",
+    "in_label": "دخول (+)",
+    "out_label": "خروج (-)",
+    "stock_preview": "معاينة المخزون",
+    "note_placeholder": "ملاحظة اختيارية (مثال: الفاتورة، الزبون، الشاحنة)",
+    "confirm_in": "تأكيد الدخول (+)",
+    "confirm_out": "تأكيد الخروج (-)",
+    "read_only": "للقراءة فقط",
+    "invalid_qty": "يرجى إدخال كمية أكبر من صفر",
+    "stock_added": "تمت إضافة المخزون",
+    "stock_deducted": "تم سحب المخزون"
+  },
+  "simple_mode": {
+    "active_pill": "⚡ الوضع البسيط",
+    "switch_to_classic": "التبديل إلى الوضع الكامل",
+    "search_placeholder": "ابحث عن طول البوتريل، الاسم أو الرمز...",
+    "sorted_by_last_managed": "آخر العمليات",
+    "length": "الطول",
+    "sort_length_asc": "الطول: من الأصغر للأكبر",
+    "sort_length_desc": "الطول: من الأكبر للأصغر",
+    "sort_stock_low": "المخزون الأقل أولاً"
+  },
+  "classic_mode": {
+    "active_pill": "🏛️ الوضع الكامل",
+    "switch_to_simple": "التبديل إلى الوضع البسيط",
+    "switch_btn": "⚡ الوضع البسيط"
   }
 }

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { warehouseDb } from '../lib/warehouseDb'
+import { getItemLabel, getCategoryLabel } from '../data'
+import ItemSymbol from '../components/ItemSymbol'
 import {
   Boxes,
   AlertTriangle,
@@ -77,7 +79,8 @@ function formatWorkerName(log, fallbackText) {
 
 // Modal for modifying the stock of a selected item directly from the Dashboard
 function StockAdjustmentModal({ item, initialAction = 'IN', onClose, onSuccess }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currentLang = i18n.language || 'en'
   const { user, profile, canModifyStock } = useAuth()
   const [action, setAction] = useState(initialAction === 'OUT' ? 'OUT' : 'IN')
   const [quantity, setQuantity] = useState(10)
@@ -135,19 +138,22 @@ function StockAdjustmentModal({ item, initialAction = 'IN', onClose, onSuccess }
       <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-7 space-y-5 animate-in slide-in-from-bottom duration-200 max-h-[92vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-          <div className="min-w-0">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-              <SlidersHorizontal className="w-3 h-3" />
-              {t('dashboard.adjustStockModalTitle', 'Quick Stock Adjustment')}
-            </span>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1.5 truncate">
-              {item.name}
-            </h3>
-            {item.location && (
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                <span>{item.location}</span>
-              </div>
-            )}
+          <div className="flex items-start gap-3 min-w-0">
+            <ItemSymbol item={item} size="md" />
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                <SlidersHorizontal className="w-3 h-3" />
+                {t('dashboard.adjustStockModalTitle', 'Quick Stock Adjustment')}
+              </span>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1.5 truncate">
+                {getItemLabel(item, currentLang)}
+              </h3>
+              {item.location && (
+                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <span>{item.location}</span>
+                </div>
+              )}
+            </div>
           </div>
 
           <button
@@ -343,7 +349,8 @@ function StockAdjustmentModal({ item, initialAction = 'IN', onClose, onSuccess }
 }
 
 export default function Dashboard() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currentLang = i18n.language || 'en'
   const { user, profile } = useAuth()
   const [items, setItems] = useState([])
   const [recentLogs, setRecentLogs] = useState([])
@@ -540,16 +547,21 @@ export default function Dashboard() {
             <div className="space-y-3">
               {/* Item Info + Current Stock */}
               <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg font-black text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {lastGlobalItem.name}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    {(lastGlobalItem.category || lastGlobalItem.categories?.name) && (
-                      <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold truncate max-w-[150px]">
-                        {lastGlobalItem.category || lastGlobalItem.categories?.name}
-                      </span>
-                    )}
+                <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                  <ItemSymbol item={lastGlobalItem} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {getItemLabel(lastGlobalItem, currentLang)}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      {(lastGlobalItem.category || lastGlobalItem.categories?.name) && (
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold truncate max-w-[150px]">
+                          {getCategoryLabel(lastGlobalItem.category_slug || lastGlobalItem.category_id, currentLang) ||
+                            lastGlobalItem.category ||
+                            lastGlobalItem.categories?.name}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -668,16 +680,21 @@ export default function Dashboard() {
             <div className="space-y-3">
               {/* Item Info + Current Stock */}
               <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg font-black text-slate-900 dark:text-white truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                    {lastUserItem.name}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    {(lastUserItem.category || lastUserItem.categories?.name) && (
-                      <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold truncate max-w-[150px]">
-                        {lastUserItem.category || lastUserItem.categories?.name}
-                      </span>
-                    )}
+                <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                  <ItemSymbol item={lastUserItem} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      {getItemLabel(lastUserItem, currentLang)}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      {(lastUserItem.category || lastUserItem.categories?.name) && (
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold truncate max-w-[150px]">
+                          {getCategoryLabel(lastUserItem.category_slug || lastUserItem.category_id, currentLang) ||
+                            lastUserItem.category ||
+                            lastUserItem.categories?.name}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -939,13 +956,16 @@ export default function Dashboard() {
                   className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-amber-400/70 dark:border-amber-600/60 shadow-sm flex flex-col justify-between gap-3"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h3 className="text-base font-black text-slate-900 dark:text-white leading-snug">
-                        {item.name}
-                      </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                        {item.location || 'Warehouse Yard'}
-                      </p>
+                    <div className="flex items-start gap-2.5 min-w-0">
+                      <ItemSymbol item={item} size="sm" />
+                      <div className="min-w-0">
+                        <h3 className="text-base font-black text-slate-900 dark:text-white leading-snug truncate">
+                          {getItemLabel(item, currentLang)}
+                        </h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                          {item.location || 'Warehouse Yard'}
+                        </p>
+                      </div>
                     </div>
 
                     <div className="text-end shrink-0">

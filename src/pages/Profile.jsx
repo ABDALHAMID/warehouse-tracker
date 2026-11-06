@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import { useUIMode } from '../context/UIModeContext'
 import {
   listWorkerProfiles,
   updateWorkerProfile,
@@ -87,6 +88,7 @@ function MyProfileForm({ profile }) {
   const { t, i18n } = useTranslation()
   const { updateOwnProfile, refreshProfile, isDemoUser } = useAuth()
   const { applyTheme } = useTheme()
+  const { uiMode, setUIMode } = useUIMode()
 
   const [form, setForm] = useState({
     full_name: profile.full_name || '',
@@ -197,6 +199,25 @@ function MyProfileForm({ profile }) {
           >
             <option value="light">{t('profile.theme_light')}</option>
             <option value="dark">{t('profile.theme_dark')}</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="profile-uimode" className={labelClass}>
+            {t('simple_mode.active_pill', 'Interface Mode')}
+          </label>
+          <select
+            id="profile-uimode"
+            value={uiMode}
+            onChange={(e) => setUIMode(e.target.value)}
+            className={inputClass}
+          >
+            <option value="simple">
+              {t('simple_mode.active_pill', '⚡ Simple Mode (Poutrelle Focus)')}
+            </option>
+            <option value="classic">
+              {t('classic_mode.active_pill', '🏛️ Classic Mode (Full Warehouse)')}
+            </option>
           </select>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
+import { useUIMode } from '../context/UIModeContext'
 import ThemeToggle from './ThemeToggle'
 import LangSwitcher from './LangSwitcher'
 import {
@@ -10,6 +11,7 @@ import {
   HardHat,
   UserCircle,
   MapPin,
+  Sliders,
 } from 'lucide-react'
 import { isSupabaseConfigured } from '../lib/supabaseClient'
 import { getRoleBadgeClasses } from '../lib/workerProfiles'
@@ -17,6 +19,7 @@ import { getRoleBadgeClasses } from '../lib/workerProfiles'
 export default function Layout() {
   const { t } = useTranslation()
   const { user, profile, signOut, isDemoUser } = useAuth()
+  const { uiMode, toggleUIMode } = useUIMode()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -111,8 +114,30 @@ export default function Layout() {
             </NavLink>
           </nav>
 
-          {/* Controls: Lang + Theme + Worker & Logout */}
+          {/* Controls: Mode Switch + Lang + Theme + Worker & Logout */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* UI Mode Toggle Button */}
+            <button
+              type="button"
+              onClick={toggleUIMode}
+              title={
+                uiMode === 'simple'
+                  ? `${t('simple_mode.switch_to_classic', 'Switch to Classic Mode')} (Ctrl+Shift+M)`
+                  : `${t('classic_mode.switch_to_simple', 'Switch to Simple Mode')} (Ctrl+Shift+M)`
+              }
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs hover:bg-blue-100 dark:hover:bg-blue-900/50"
+            >
+              <Sliders className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <span className="hidden sm:inline">
+                {uiMode === 'simple'
+                  ? t('simple_mode.switch_to_classic', '🏛️ Switch to Classic')
+                  : t('classic_mode.switch_to_simple', '⚡ Switch to Simple')}
+              </span>
+              <span className="sm:hidden text-[10px] font-black">
+                {uiMode === 'simple' ? '🏛️ Classic' : '⚡ Simple'}
+              </span>
+            </button>
+
             <LangSwitcher />
             <ThemeToggle />
 

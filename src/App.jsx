@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
+import { useUIMode } from './context/UIModeContext'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -7,6 +8,7 @@ import InventoryList from './pages/InventoryList'
 import ItemDetail from './pages/ItemDetail'
 import ScanView from './pages/ScanView'
 import Profile from './pages/Profile'
+import SimpleWarehouseView from './pages/SimpleWarehouseView'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -43,6 +45,8 @@ const PublicRoute = ({ children }) => {
 }
 
 export default function App() {
+  const { uiMode } = useUIMode()
+
   return (
     <Routes>
       {/* Public Login Route */}
@@ -55,21 +59,47 @@ export default function App() {
         }
       />
 
-      {/* Protected Routes inside App Layout */}
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Dashboard />} />
-        <Route path="inventory" element={<InventoryList />} />
-        <Route path="item/:id" element={<ItemDetail />} />
-        <Route path="scan" element={<ScanView />} />
-        <Route path="profile" element={<Profile />} />
-      </Route>
+      {/* Dual UI Architecture: Simple Mode vs Classic Mode */}
+      {uiMode === 'simple' ? (
+        <>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <SimpleWarehouseView />
+              </ProtectedRoute>
+            }
+          />
+          {/* Classic routes remain accessible in cold sleep without colliding on "/" */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="inventory" element={<InventoryList />} />
+            <Route path="item/:id" element={<ItemDetail />} />
+            <Route path="scan" element={<ScanView />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+        </>
+      ) : (
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="inventory" element={<InventoryList />} />
+          <Route path="item/:id" element={<ItemDetail />} />
+          <Route path="scan" element={<ScanView />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      )}
 
       {/* Catch-all fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

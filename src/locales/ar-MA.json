@@ -166,7 +166,10 @@
     "plumbing_drainage": "الرصاصة والبلومبري وجعاب",
     "paints_waterproofing": "الصباغة والكتامة وليدوفيج",
     "tiles_finishes": "الزليج والكولا وفينيسيون",
-    "poutrelles": "البوتريل د الدالة"
+    "poutrelles": "البوتريل د الدالة",
+    "concrete-beams": "البوتريل",
+    "concrete_beams": "البوتريل",
+    "poutrelle": "البوتريل"
   },
   "common": {
     "units": {
@@ -230,5 +233,41 @@
     "account_deactivated": "الحساب ديالك توقف. تواصل مع المسؤول ديال الديبو.",
     "read_only_mode": "غير القراية — ما تقدرش تبدل الستوك",
     "no_profile": "ما كاين حتى بروفايل مربوط بهاد الحساب. قول للمسؤول يزيدو."
+  },
+  "last_managed": {
+    "title": "آخر ما تخدم",
+    "just_now": "دابا نيت",
+    "minutes_ago": "هادي {{count}} دقيقة",
+    "hours_ago": "هادي {{count}} ساعة",
+    "days_ago": "هادي {{count}} يوم"
+  },
+  "quick_update": {
+    "title": "تحديث د السطوك دغيا",
+    "quantity": "شحال بغيتي تزيد ولا تنقص",
+    "in_label": "دخيل (+)",
+    "out_label": "خريج (-)",
+    "stock_preview": "شوف السطوك كفاش غيولي",
+    "note_placeholder": "ملاحظة (بون، كليان، كاميو)",
+    "confirm_in": "أكد الدخول (+)",
+    "confirm_out": "أكد الخروج (-)",
+    "read_only": "غير للقراية",
+    "invalid_qty": "عفاك كتب كمية كبر من 0",
+    "stock_added": "تزاد ف الستوك",
+    "stock_deducted": "تنقص من الستوك"
+  },
+  "simple_mode": {
+    "active_pill": "⚡ المود الخفيف",
+    "switch_to_classic": "بدل للمود الكلاسيكي",
+    "search_placeholder": "قلب على طول البوتريل ولا السمية...",
+    "sorted_by_last_managed": "آخر ما تخدم",
+    "length": "الطول",
+    "sort_length_asc": "الطول: من القصير للطويل",
+    "sort_length_desc": "الطول: من الطويل للقصير",
+    "sort_stock_low": "الستوك القليل اللول"
+  },
+  "classic_mode": {
+    "active_pill": "🏛️ المود الكلاسيكي",
+    "switch_to_simple": "بدل للمود الخفيف",
+    "switch_btn": "⚡ المود الخفيف"
   }
 }

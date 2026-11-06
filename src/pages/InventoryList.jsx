@@ -2,7 +2,13 @@ import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { warehouseDb } from '../lib/warehouseDb'
-import { CATEGORIES_TYPES } from '../data/categories_types'
+import {
+  CATEGORIES_TYPES,
+  getCategoryLabel,
+  getItemLabel,
+  getItemLength,
+} from '../data'
+import ItemSymbol from '../components/ItemSymbol'
 import {
   Search,
   X,
@@ -17,7 +23,8 @@ import {
 } from 'lucide-react'
 
 export default function InventoryList() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currentLang = i18n.language || 'en'
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -56,21 +63,23 @@ export default function InventoryList() {
         id: cat.id,
         slug: cat.slug,
         labelKey: `categories.${cat.slug}`,
-        name: t(`categories.${cat.slug}`, cat.name_fr),
+        name: getCategoryLabel(cat, currentLang),
       })),
     ],
-    [t]
+    [t, currentLang]
   )
 
   // Filter items based on search term, category, and status
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
-      // 1. Search term match (by name or SKU)
+      // 1. Search term match (by localized name, raw name, or SKU)
       const q = searchTerm.trim().toLowerCase()
+      const localizedName = getItemLabel(item, currentLang).toLowerCase()
       const matchesSearch =
         !q ||
-        item.name.toLowerCase().includes(q) ||
-        item.sku.toLowerCase().includes(q) ||
+        localizedName.includes(q) ||
+        (item.name && item.name.toLowerCase().includes(q)) ||
+        (item.sku && item.sku.toLowerCase().includes(q)) ||
         (item.location && item.location.toLowerCase().includes(q))
 
       // 2. Category match (supports ID, slug, or name match)
@@ -95,7 +104,7 @@ export default function InventoryList() {
 
       return matchesSearch && matchesCategory && matchesStatus
     })
-  }, [items, searchTerm, selectedCategory, selectedStatus])
+  }, [items, searchTerm, selectedCategory, selectedStatus, currentLang])
 
   return (
     <div className="space-y-5">
@@ -247,16 +256,24 @@ export default function InventoryList() {
                 className="group block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-600 shadow-sm hover:shadow-md transition-all active:scale-[0.99] cursor-pointer touch-manipulation select-none"
               >
                 <div className="flex items-start justify-between gap-3 mb-2.5">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
-                        {item.category_slug ? t(`categories.${item.category_slug}`, item.category) : item.category}
-                      </span>
-                    </div>
+                  <div className="flex items-start gap-3 min-w-0">
+                    <ItemSymbol item={item} size="md" />
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
+                          {getCategoryLabel(item.category_slug || item.category_id, currentLang) || item.category}
+                        </span>
+                        {getItemLength(item) && (
+                          <span className="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                            {getItemLength(item)}
+                          </span>
+                        )}
+                      </div>
 
-                    <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors m-0">
-                      {item.name}
-                    </h2>
+                      <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors m-0 truncate">
+                        {getItemLabel(item, currentLang)}
+                      </h2>
+                    </div>
                   </div>
 
                   {/* Stock Quantity Badge */}

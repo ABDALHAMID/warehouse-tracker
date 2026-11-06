@@ -15,39 +15,43 @@ if (typeof window !== 'undefined') {
 const normalizeItem = (item) => {
   if (!item) return null
   const matchedCat = item.category_id ? getCategoryById(item.category_id) : null
+  const isPtr = item.sku?.startsWith('PTR-')
   return {
     ...item,
-    category_id: item.category_id || matchedCat?.id || null,
-    category_slug: matchedCat?.slug || item.category_slug || 'other',
+    category_id: item.category_id || matchedCat?.id || (isPtr ? '33333333-3333-3333-3333-333333333333' : null),
+    category_slug: matchedCat?.slug || item.category_slug || (isPtr ? 'concrete-beams' : 'other'),
     category:
       matchedCat?.name ||
       item.categories?.name ||
       item.category ||
-      'Autre',
+      (isPtr ? 'Concrete Beams' : 'Other'),
     location: item.location_bin || item.location || '',
   }
 }
 
 export const warehouseDb = {
-  // Fetch all items from items table
-  async fetchItems() {
+  // Fetch all items from items table with configurable ordering
+  async fetchItems(options = {}) {
     if (!isSupabaseConfigured) {
       return { data: [], error: null }
     }
+
+    const orderCol = options.orderBy || 'name'
+    const ascending = options.ascending !== undefined ? options.ascending : orderCol === 'name'
 
     try {
       // Join with categories table if available
       const { data, error } = await supabase
         .from('items')
         .select('*, categories(name)')
-        .order('name', { ascending: true })
+        .order(orderCol, { ascending })
 
       if (error) {
         // Fallback to simple select if join with categories fails
         const { data: simpleData, error: simpleError } = await supabase
           .from('items')
           .select('*')
-          .order('name', { ascending: true })
+          .order(orderCol, { ascending })
 
         if (simpleError) {
           console.error('Supabase items fetch failed:', simpleError.message)
@@ -381,6 +385,41 @@ export const warehouseDb = {
         .subscribe()
     } catch (e) {
       console.warn('Failed to subscribe to Supabase channel', e)
+    }
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel)
+      }
+    }
+  },
+
+  // Subscribe to all items realtime updates
+  subscribeToAllItems(onUpdate) {
+    if (!isSupabaseConfigured) {
+      return () => {}
+    }
+
+    let channel = null
+    try {
+      channel = supabase
+        .channel('all-items-realtime-channel')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'items',
+          },
+          (payload) => {
+            if (payload.new) {
+              onUpdate(normalizeItem(payload.new), payload.eventType)
+            }
+          }
+        )
+        .subscribe()
+    } catch (e) {
+      console.warn('Failed to subscribe to all-items channel', e)
     }
 
     return () => {

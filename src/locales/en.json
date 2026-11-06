@@ -166,7 +166,10 @@
     "plumbing_drainage": "Plumbing & Drainage",
     "paints_waterproofing": "Paints & Waterproofing",
     "tiles_finishes": "Tiles & Finishes",
-    "poutrelles": "Prestressed Joists (Poutrelles)"
+    "poutrelles": "Prestressed Joists (Poutrelles)",
+    "concrete-beams": "Concrete Beams",
+    "concrete_beams": "Concrete Beams",
+    "poutrelle": "Concrete Beams (Poutrelles)"
   },
   "common": {
     "units": {
@@ -230,5 +233,41 @@
     "account_deactivated": "Your account has been deactivated. Please contact your warehouse manager.",
     "read_only_mode": "Read-only mode — you cannot modify stock",
     "no_profile": "No worker profile is linked to this account. Ask a manager to create one."
+  },
+  "last_managed": {
+    "title": "Last Managed",
+    "just_now": "Just now",
+    "minutes_ago": "{{count}}m ago",
+    "hours_ago": "{{count}}h ago",
+    "days_ago": "{{count}}d ago"
+  },
+  "quick_update": {
+    "title": "Quick Stock Update",
+    "quantity": "Quantity to Move",
+    "in_label": "Entrée",
+    "out_label": "Sortie",
+    "stock_preview": "Stock Preview",
+    "note_placeholder": "Optional note (e.g. invoice, client, truck)",
+    "confirm_in": "Confirm IN (+)",
+    "confirm_out": "Confirm OUT (-)",
+    "read_only": "Read Only",
+    "invalid_qty": "Please enter a valid quantity greater than 0",
+    "stock_added": "Stock Added",
+    "stock_deducted": "Stock Deducted"
+  },
+  "simple_mode": {
+    "active_pill": "⚡ Simple Mode",
+    "switch_to_classic": "Switch to Classic Mode",
+    "search_placeholder": "Search Poutrelle length, name, or SKU...",
+    "sorted_by_last_managed": "Last Managed",
+    "length": "Length",
+    "sort_length_asc": "Length: Short → Long",
+    "sort_length_desc": "Length: Long → Short",
+    "sort_stock_low": "Lowest Stock First"
+  },
+  "classic_mode": {
+    "active_pill": "🏛️ Classic Mode",
+    "switch_to_simple": "Switch to Simple Mode",
+    "switch_btn": "⚡ Simple Mode"
   }
 }

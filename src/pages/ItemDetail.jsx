@@ -4,6 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { warehouseDb } from '../lib/warehouseDb'
 import { useAuth } from '../context/AuthContext'
 import {
+  getItemLabel,
+  getCategoryLabel,
+  getItemLength,
+} from '../data'
+import ItemSymbol from '../components/ItemSymbol'
+import {
   ArrowLeft,
   Plus,
   Minus,
@@ -23,7 +29,8 @@ import {
 
 export default function ItemDetail() {
   const { id } = useParams()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currentLang = i18n.language || 'en'
   const { user, profile, canModifyStock } = useAuth()
 
   const [item, setItem] = useState(null)
@@ -186,22 +193,30 @@ export default function ItemDetail() {
       {/* Main Material Detail Card */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
         {/* Title & Category */}
-        <div>
-          <div className="flex items-center gap-2 flex-wrap mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
-              {item.category_slug ? t(`categories.${item.category_slug}`, item.category) : item.category}
-            </span>
+        <div className="flex items-start gap-4">
+          <ItemSymbol item={item} size="lg" />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+                {getCategoryLabel(item.category_slug || item.category_id, currentLang) || item.category}
+              </span>
+              {getItemLength(item) && (
+                <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  {getItemLength(item)}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
+              {getItemLabel(item, currentLang)}
+            </h1>
+
+            {item.description && (
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                {item.description}
+              </p>
+            )}
           </div>
-
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
-            {item.name}
-          </h1>
-
-          {item.description && (
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
-              {item.description}
-            </p>
-          )}
         </div>
 
         {/* Location & Status chips */}
